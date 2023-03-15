@@ -42,7 +42,7 @@ export default function Register() {
   });
 
   function handleClick() {
-    router.push("/");
+    router.push("/landingpage");
   }
 
   async function onSubmit(values: Values) {

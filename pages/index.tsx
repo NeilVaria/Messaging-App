@@ -6,10 +6,10 @@ import router from "next/router";
 export default function Home() {
   const { data: session, status } = useSession();
   if (status === "loading") {
-    return <p>Loading...</p>;
+    return <p>Loadin..</p>;
   }
   if (status === "unauthenticated") {
-    router.push("/api/auth/signin");
+    router.push("/landingpage");
   } else {
     return (
       <>
@@ -35,7 +35,13 @@ export default function Home() {
               </Button>
             </div>
             <div className="w-1/3 h-full flex justify-center items-center">
-              <button onClick={() => signOut()}>Sign out</button>
+            <Button
+                className="transition-all w-1/5 h-12 bg-gradient-to-br from-yellow-700 to-amber-900 rounded-md hover:shadow-lg hover:bg-amber-300 text-white font-bold py-2 px-4 border-2 border-yellow-700 shadow-yellow-500/20 hover:shadow-yellow-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                data-ripple-light="true"
+                onClick={() => signOut()}
+              >
+                Sign Out
+              </Button>
             </div>
           </div>
         </ThemeProvider>
