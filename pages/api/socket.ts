@@ -16,9 +16,14 @@ interface NextApiResponseWithSocket extends NextApiResponse {
 }
 
 const io = new Server({ transports: ["websocket"] });
+// Map containg socket id and username
+const activeUsers = new Map<string, String>();
 
 io.on("connection", (socket: IOSocket) => {
-  console.log("a user connected");
+  const username = socket.handshake.query.username as string;
+  console.log("User:", username, "connected with socket id:", socket.id);
+  activeUsers.set(socket.id, username);
+  io.emit("active users", Array.from(activeUsers.values()));
 
   socket.on("chat message", ({ username, message }) => {
     console.log(`[${username}]: ${message}`);
@@ -26,7 +31,10 @@ io.on("connection", (socket: IOSocket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    const user = activeUsers.get(socket.id);
+    console.log("User:", user, "disconnected with socket id:", socket.id);
+    activeUsers.delete(socket.id);
+    io.emit("active users", Array.from(activeUsers.values()));
   });
 });
 

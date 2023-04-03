@@ -42,6 +42,10 @@ export default NextAuth({
     }),
   ],
   callbacks: {
+    session: async (session, user) => {
+      session.user.id = user.id;
+      return Promise.resolve(session);
+    },
     jwt({ token, user }) {
       // If - if you have multiple providers, because they return different user objects
       // and you need to check for undefined because sometimes jwt runs multiple times in a row, and in the second one the user data gets lost, or will overwrite what you have with undefined

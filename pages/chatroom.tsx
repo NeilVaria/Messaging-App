@@ -5,9 +5,11 @@ import { useSession } from "next-auth/react";
 const Home = () => {
   const { data: session, status } = useSession();
   const username = session?.user.username;
+
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [messages, setMessages] = useState<Array<{ username: string; message: string }>>([]);
+  const [activeUsers, setActiveUsers] = useState<string[]>([]);
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -39,7 +41,11 @@ const Home = () => {
 
     fetchData();
 
-    const newSocket = io("http://localhost:3000", { transports: ["websocket"] });
+    const newSocket = io("http://localhost:3000", {
+      transports: ["websocket"],
+      query: { username },
+    });
+
     setSocket(newSocket);
 
     newSocket.on("connect", () => {
@@ -51,12 +57,17 @@ const Home = () => {
       setMessages((prevMessages) => [...prevMessages, data]);
     });
 
+    newSocket.on("active users", (users: string[]) => {
+      console.log("Active users:", users);
+      setActiveUsers(users);
+    });
+
     return () => {
       // disconnect socket and abort fetch when component unmounts
       newSocket.disconnect();
       controller.abort();
     };
-  }, []);
+  }, [username]);
 
   return (
     <>
@@ -65,6 +76,7 @@ const Home = () => {
           <div>Chatroom</div>
           <div>Current user: {username}</div>
         </div>
+        <div className="p-2 bg-blue-gray-100">Active users: {activeUsers.join(", ")}</div>
         <div className="flex flex-col items-start overflow-y-auto flex-grow">
           {messages.map((msg, index) => (
             <div key={index} className={`p-2 ${msg.username === username ? "justify-end" : ""}`} style={{ display: "flex", width: "100%" }}>
