@@ -29,3 +29,8 @@ model Message {
   authorId  String
   author    User     @relation(fields: [authorId], references: [id])
 }
+
+model Room {
+  id   String @id @default(cuid())
+  name String
+}

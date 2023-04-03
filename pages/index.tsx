@@ -22,7 +22,7 @@ export default function Home() {
               <Button
                 className="transition-all w-2/5 h-12 bg-gradient-to-tr from-yellow-700 to-amber-900 rounded-md hover:shadow-lg hover:bg-amber-300 text-white font-bold py-2 px-4 border-2 border-yellow-700 shadow-yellow-500/20 hover:shadow-yellow-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                 data-ripple-light="true"
-                onClick={() => router.push("/chatroom")}
+                onClick={() => router.push("/rooms")}
               >
                 Chatroom
               </Button>

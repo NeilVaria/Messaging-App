@@ -1,15 +1,18 @@
 import { useEffect, useState, FormEvent } from "react";
 import { io, Socket } from "socket.io-client";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const Home = () => {
   const { data: session, status } = useSession();
   const username = session?.user.username;
+  const router = useRouter();
 
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);
   const [messages, setMessages] = useState<Array<{ username: string; message: string }>>([]);
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
+  const [roomId, setRoomid] = useState<string>("");
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -61,19 +64,20 @@ const Home = () => {
       console.log("Active users:", users);
       setActiveUsers(users);
     });
-
+    const { roomid } = router.query;
+    setRoomid(roomid as string);
     return () => {
       // disconnect socket and abort fetch when component unmounts
       newSocket.disconnect();
       controller.abort();
     };
-  }, [username]);
+  }, [username, router.isReady]);
 
   return (
     <>
       <div className="flex flex-col w-screen h-screen">
         <div className="flex flex-row justify-between items-center bg-gray-200 p-2">
-          <div>Chatroom</div>
+          <div>Chatroom: {roomId}</div>
           <div>Current user: {username}</div>
         </div>
         <div className="p-2 bg-blue-gray-100">Active users: {activeUsers.join(", ")}</div>
