@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === "POST") {
     if (!req.body) return res.status(404).json({ error: "Don't have form data!" });
 
-    const { email, fname, lname, password } = req.body;
+    const { email, name, role, username, password } = req.body;
 
     // Look up user with the given email
     const existingUser: User | null = await prisma.user.findUnique({
@@ -27,6 +27,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(409).json({ error: "Email address already in use" });
     }
 
+    const existingUserByUsername: User | null = await prisma.user.findUnique({
+      where: {
+        username: username,
+      },
+    });
+
+    if (existingUserByUsername) {
+      return res.status(409).json({ error: "Username already in use" });
+    }
+
     // Hash the password
     const salt = await bcrypt.genSalt(12);
     const hash = await bcrypt.hash(password, salt);
@@ -35,8 +45,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const newUser: User = await prisma.user.create({
       data: {
         email: email,
-        fname: fname,
-        lname: lname,
+        name: name,
+        role: role,
+        username: username,
         password: hash,
       } as UserWithPassword,
     });

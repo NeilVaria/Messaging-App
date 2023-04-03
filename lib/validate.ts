@@ -8,8 +8,8 @@ interface loginValues {
 
 interface registerValues {
   email: string;
-  fname: string;
-  lname: string;
+  name: string;
+  username: string;
   password: string;
   confirmPassword: string;
 }
@@ -54,20 +54,17 @@ export function registerValidate(values: registerValues) {
   //   toast.error("Invalid Email Address\nMust Contain @make-it-all.co.uk Suffix");
   // }
 
-  if (!values.fname) {
-    errors.fname = "Required";
-    toast.error("First Name Required");
-  } else if (values.fname.includes(" ")) {
-    errors.fname = "First Name Must Not Contain Any Spaces";
-    toast.error("First Name Must Not Contain Any Spaces");
+  if (!values.name) {
+    errors.name = "Required";
+    toast.error("Full Name Required");
   }
 
-  if (!values.lname) {
-    errors.lname = "Required";
-    toast.error("Last Name Required");
-  } else if (values.lname.includes(" ")) {
-    errors.lname = "Last Name Must Not Contain Any Spaces";
-    toast.error("Last Name Must Not Contain Any Spaces");
+  if (!values.username) {
+    errors.username = "Required";
+    toast.error("Username Required");
+  } else if (values.username.includes(" ")) {
+    errors.username = "Username Must Not Contain Any Spaces";
+    toast.error("Username Must Not Contain Any Spaces");
   }
 
   if (!values.password) {
