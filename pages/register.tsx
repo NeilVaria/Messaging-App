@@ -14,8 +14,9 @@ import { Button, ThemeProvider, Dialog, DialogHeader, DialogBody, DialogFooter }
 
 interface Values {
   email: string;
-  fname: string;
-  lname: string;
+  name: string;
+  username: string;
+  role: string;
   password: string;
   confirmPassword: string;
 }
@@ -30,8 +31,9 @@ export default function Register() {
   const formik = useFormik({
     initialValues: {
       email: "",
-      fname: "",
-      lname: "",
+      name: "",
+      role: "user",
+      username: "",
       password: "",
       confirmPassword: "",
     },
@@ -87,30 +89,45 @@ export default function Register() {
         <div>
           <Toaster reverseOrder={true} />
         </div>
-        <div className="flex h-screen w-full justify-center items-center">
+        <div className="flex h-screen w-full justify-center items-center bg-gradient-to-tr from-gray-400 to-gray-700">
           <div className="flex flex-col md:flex-row">
             <div>
-              <form className="flex flex-col w-60 md:w-80" onSubmit={formik.handleSubmit} noValidate>
+              <form className="flex flex-col bg-white shadow-lg p-8 w-80 md:w-96 rounded-md" onSubmit={formik.handleSubmit} noValidate autoComplete="false">
                 <h1 className="text-3xl font-bold text-center mb-6 md:mt-0 mt-2">Register</h1>
+                <div className="mb-6">
+                  <label htmlFor="name">Full Name</label>
+                  <div className="border-b-2 border-gray-400 focus:border-none p-3">
+                    <FontAwesomeIcon icon={faUser} color="grey" />
+                    <input placeholder="Type your full name" id="name" className="focus:outline-none ml-2" type="name" {...formik.getFieldProps("name")} />
+                  </div>
+                </div>
+                <div className="mb-6">
+                  <label htmlFor="username">Username</label>
+                  <div className="border-b-2 border-gray-400 focus:border-none p-3">
+                    <FontAwesomeIcon icon={faUser} color="grey" />
+                    <input
+                      placeholder="Type your username"
+                      id="username"
+                      className="focus:outline-none ml-2"
+                      type="username"
+                      {...formik.getFieldProps("username")}
+                    />
+                  </div>
+                </div>
+                <div className="mb-5">
+                  <label htmlFor="role">Role</label>
+                  <div className="border rounded-md border-gray-400 p-2 mt-1">
+                    <select id="role" className="focus:outline-none w-full" {...formik.getFieldProps("role")}>
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                </div>
                 <div className="mb-6">
                   <label htmlFor="email">Email</label>
                   <div className="border-b-2 border-gray-400 focus:border-none p-3">
                     <FontAwesomeIcon icon={faEnvelope} color="grey" />
                     <input placeholder="Type your email" id="email" className="focus:outline-none ml-2" type="email" {...formik.getFieldProps("email")} />
-                  </div>
-                </div>
-                <div className="mb-6">
-                  <label htmlFor="firstName">First Name</label>
-                  <div className="border-b-2 border-gray-400 focus:border-none p-3">
-                    <FontAwesomeIcon icon={faUser} color="grey" />
-                    <input placeholder="Type your first name" id="fname" className="focus:outline-none ml-2" type="fname" {...formik.getFieldProps("fname")} />
-                  </div>
-                </div>
-                <div className="mb-6">
-                  <label htmlFor="lastName">Last Name</label>
-                  <div className="border-b-2 border-gray-400 focus:border-none p-3">
-                    <FontAwesomeIcon icon={faUser} color="grey" />
-                    <input placeholder="Type your last name" id="lname" className="focus:outline-none ml-2" type="lname" {...formik.getFieldProps("lname")} />
                   </div>
                 </div>
                 <div className="mb-6">
@@ -142,7 +159,7 @@ export default function Register() {
                 <div>
                   <Button
                     type="submit"
-                    className="transition-all bg-gradient-to-tr from-yellow-600 to-amber-700 w-full rounded-full hover:shadow-lg hover:bg-amber-300 text-white font-bold py-2 px-4 border-2 border-yellow-700 shadow-yellow-500/20 hover:shadow-yellow-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                    className="transition-all bg-gradient-to-tr from-blue-300 to-blue-700 w-full rounded-md hover:shadow-lg hover:bg-blue-300 text-white font-bold py-2 px-4 border-2 border-blue-300 shadow-blue-500/20 hover:shadow-blue-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                     data-ripple-light="true"
                   >
                     Register

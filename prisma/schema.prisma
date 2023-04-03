@@ -13,8 +13,9 @@ datasource db {
 
 model User {
   id       String    @id @default(cuid())
-  fname    String?
-  lname    String?
+  name     String
+  username String    @unique
+  role     String
   email    String    @unique
   image    String?
   password String
