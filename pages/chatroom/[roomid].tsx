@@ -3,6 +3,11 @@ import { io, Socket } from "socket.io-client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
+type Room = {
+  id: string;
+  name: string;
+};
+
 const Home = () => {
   const { data: session, status } = useSession();
   const username = session?.user.username;
@@ -13,6 +18,7 @@ const Home = () => {
   const [messages, setMessages] = useState<Array<{ username: string; message: string }>>([]);
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
   const [roomId, setRoomid] = useState<string>("");
+  const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -64,8 +70,11 @@ const Home = () => {
       console.log("Active users:", users);
       setActiveUsers(users);
     });
+
     const { roomid } = router.query;
+
     setRoomid(roomid as string);
+
     return () => {
       // disconnect socket and abort fetch when component unmounts
       newSocket.disconnect();
@@ -73,11 +82,31 @@ const Home = () => {
     };
   }, [username, router.isReady]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
+    const fetchRoomData = async () => {
+      if (roomId) {
+        const response = await fetch(`/api/rooms/getCurrentRoom?id=${roomId}`, { signal });
+        if (response.ok) {
+          const roomData = await response.json();
+          setCurrentRoom(roomData);
+        } else {
+          console.error("Error fetching room data");
+        }
+      }
+    };
+    fetchRoomData();
+    return () => {
+      controller.abort();
+    };
+  }, [roomId]);
+
   return (
     <>
       <div className="flex flex-col w-screen h-screen">
         <div className="flex flex-row justify-between items-center bg-gray-200 p-2">
-          <div>Chatroom: {roomId}</div>
+          <div>Chatroom: {currentRoom?.name}</div>
           <div>Current user: {username}</div>
         </div>
         <div className="p-2 bg-blue-gray-100">Active users: {activeUsers.join(", ")}</div>

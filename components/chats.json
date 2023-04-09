@@ -1,0 +1,102 @@
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "username": "johndoe",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": true,
+    "lastMessage": "Hey, what's up?",
+    "lastMessageTimestamp": "2023-04-08T12:00:00.000Z",
+    "hasNotification": true
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "username": "janesmith",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": false,
+    "lastMessage": "Just finished watching the movie.",
+    "lastMessageTimestamp": "2023-04-08T10:45:00.000Z",
+    "hasNotification": false
+  },
+  {
+    "id": 3,
+    "name": "Michael Brown",
+    "username": "michaelbrown",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": true,
+    "lastMessage": "See you tomorrow!",
+    "lastMessageTimestamp": "2023-04-09T03:30:00.000Z",
+    "hasNotification": false
+  },
+  {
+    "id": 4,
+    "name": "Emma Johnson",
+    "username": "emmajohnson",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": false,
+    "lastMessage": "I'll send you the files later.",
+    "lastMessageTimestamp": "2023-04-09T01:15:00.000Z",
+    "hasNotification": true
+  },
+  {
+    "id": 5,
+    "name": "Oliver Williams",
+    "username": "oliverwilliams",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": false,
+    "lastMessage": "How's the project going?",
+    "lastMessageTimestamp": "2023-04-08T18:20:00.000Z",
+    "hasNotification": false
+  },
+  {
+    "id": 6,
+    "name": "Sophia Jones",
+    "username": "sophiajones",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": true,
+    "lastMessage": "Let's meet up later!",
+    "lastMessageTimestamp": "2023-04-08T16:45:00.000Z",
+    "hasNotification": true
+  },
+  {
+    "id": 7,
+    "name": "Lucas Taylor",
+    "username": "lucastaylor",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": true,
+    "lastMessage": "Do you have the presentation ready?",
+    "lastMessageTimestamp": "2023-04-08T14:30:00.000Z",
+    "hasNotification": false
+  },
+  {
+    "id": 8,
+    "name": "Ava Lee",
+    "username": "avalee",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": false,
+    "lastMessage": "I'm going to the store, need anything?",
+    "lastMessageTimestamp": "2023-04-08T13:00:00.000Z",
+    "hasNotification": true
+  },
+  {
+    "id": 9,
+    "name": "Harper Harris",
+    "username": "harperharris",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": false,
+    "lastMessage": "The meeting has been rescheduled.",
+    "lastMessageTimestamp": "2023-04-08T11:30:00.000Z",
+    "hasNotification": false
+  },
+  {
+    "id": 10,
+    "name": "Ethan Clark",
+    "username": "ethanclark",
+    "imageUrl": "https://via.placeholder.com/50",
+    "isOnline": true,
+    "lastMessage": "Just got a new game. Want to play?",
+    "lastMessageTimestamp": "2023-04-08T10:00:00.000Z",
+    "hasNotification": true
+  }
+]

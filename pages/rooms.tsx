@@ -47,7 +47,7 @@ const Rooms = () => {
       <ul>
         {rooms.map((rooms) => (
           <li key={rooms.id}>
-            <Link href={`/chatroom/${rooms.name}`}>
+            <Link href={`/chatroom/${rooms.id}`}>
               <div>{rooms.name}</div>
             </Link>
           </li>

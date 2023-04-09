@@ -8,6 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const rooms = await prisma.room.findMany();
 
     res.status(200).json(rooms);
+    prisma.$disconnect();
   } else {
     res.status(405).json({ message: "Method not allowed" });
   }

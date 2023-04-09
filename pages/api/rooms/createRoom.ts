@@ -14,6 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     res.status(201).json(newRoom);
+    prisma.$disconnect();
   } else {
     res.status(405).json({ message: "Method not allowed" });
   }
