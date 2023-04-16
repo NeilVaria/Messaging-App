@@ -1,16 +1,44 @@
 import React from "react";
 import ChatCard from "./ChatCard";
-import chatsData from "./chats.json";
 
-interface ChatListProps {
-  selectedChatId: string | null;
-  onChatSelect: (id: string) => void;
+type ChatItem = {
+  id: string;
+  name: string;
+  username: string;
+  imageUrl: string;
+  isOnline: boolean;
+  lastMessage: string;
+  lastMessageTimestamp: string;
+  hasNotification: boolean;
+  isGroup: boolean;
+};
+
+interface ChatData {
+  id: string;
+  imageUrl: string;
+  name: string;
+  username: string;
+  isGroup: boolean;
+  isOnline: boolean;
 }
 
-const ChatList: React.FC<ChatListProps> = ({ selectedChatId, onChatSelect }) => {
+interface ChatListProps {
+  chatsData: ChatItem[];
+  selectedChatData: ChatData | null;
+  onChatSelect: (selectedChatData: ChatData) => void;
+}
+
+const sortByTimestampDesc = (a: ChatItem, b: ChatItem) => {
+  const dateA = a.lastMessageTimestamp ? new Date(a.lastMessageTimestamp) : new Date(0);
+  const dateB = b.lastMessageTimestamp ? new Date(b.lastMessageTimestamp) : new Date(0);
+
+  return dateB.getTime() - dateA.getTime();
+};
+
+const ChatList: React.FC<ChatListProps> = ({ chatsData, selectedChatData, onChatSelect }) => {
   return (
-    <div className="flex-grow overflow-y-auto">
-      {chatsData.map((chat) => (
+    <div className="flex-grow w-full">
+      {chatsData.sort(sortByTimestampDesc).map((chat) => (
         <ChatCard
           key={chat.id}
           id={chat.id.toString()}
@@ -21,8 +49,9 @@ const ChatList: React.FC<ChatListProps> = ({ selectedChatId, onChatSelect }) => 
           lastMessage={chat.lastMessage}
           lastMessageTimestamp={chat.lastMessageTimestamp}
           hasNotification={chat.hasNotification}
-          isSelected={chat.id.toString() === selectedChatId}
+          isSelected={chat.id.toString() === selectedChatData?.id}
           onSelect={onChatSelect}
+          isGroup={chat.isGroup}
         />
       ))}
     </div>

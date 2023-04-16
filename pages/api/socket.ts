@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { Socket as NetSocket } from "net";
 import { Server, Socket as IOSocket } from "socket.io";
 
+import prisma from "../../lib/prismadb";
+
 interface SocketServer extends HTTPServer {
   io?: Server | undefined;
 }
@@ -25,9 +27,51 @@ io.on("connection", (socket: IOSocket) => {
   activeUsers.set(socket.id, username);
   io.emit("active users", Array.from(activeUsers.values()));
 
-  socket.on("chat message", ({ username, message }) => {
+  socket.on("join room", (roomId: string) => {
+    socket.join(roomId);
+    console.log(`User ${username} joined room ${roomId}`);
+  });
+
+  socket.on("chat message", async ({ roomId, username, message, timestamp }) => {
     console.log(`[${username}]: ${message}`);
-    socket.broadcast.emit("chat message", { username, message });
+    socket.to(roomId).emit("chat message", { username, message, timestamp });
+
+    // Find the user who sent the message
+    const author = await prisma.user.findUnique({ where: { username } });
+
+    if (author) {
+      // Store the message in the database
+      const newMessage = await prisma.message.create({
+        data: {
+          content: message,
+          createdAt: new Date(timestamp),
+          authorId: author.id,
+          roomId,
+        },
+      });
+
+      // Get all room members excluding the author
+      const roomMembers = await prisma.roomMember.findMany({
+        where: {
+          roomId,
+          userId: {
+            not: author.id,
+          },
+        },
+      });
+
+      // Update MessageSeen for all users apart from the author
+      for (const member of roomMembers) {
+        await prisma.messageSeen.create({
+          data: {
+            messageId: newMessage.id,
+            userId: member.userId,
+            roomId,
+            seen: false,
+          },
+        });
+      }
+    }
   });
 
   socket.on("disconnect", () => {

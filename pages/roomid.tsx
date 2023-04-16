@@ -1,7 +1,7 @@
 import { useEffect, useState, FormEvent } from "react";
 import { io, Socket } from "socket.io-client";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import router from "next/router";
 
 type Room = {
   id: string;
@@ -11,7 +11,6 @@ type Room = {
 const Home = () => {
   const { data: session, status } = useSession();
   const username = session?.user.username;
-  const router = useRouter();
 
   const [message, setMessage] = useState("");
   const [socket, setSocket] = useState<Socket | null>(null);

@@ -2,8 +2,7 @@ import { PrismaClient, Prisma, User } from "@prisma/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import bcrypt from "bcrypt";
 import toast from "react-hot-toast";
-
-const prisma = new PrismaClient();
+import prisma from "../../../lib/prismadb";
 
 interface UserWithPassword extends Prisma.UserCreateInput {
   password: string;
