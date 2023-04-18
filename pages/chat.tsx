@@ -180,6 +180,8 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
     }
   }, [socket, selectedChatId]);
 
+  const WEBSOCKET_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL;
+
   useEffect(() => {
     const controller = new AbortController();
     const { signal } = controller;
@@ -197,36 +199,37 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
     };
 
     fetchData();
+    if (WEBSOCKET_URL !== undefined) {
+      const newSocket = io(WEBSOCKET_URL, {
+        transports: ["websocket"],
+        query: { username },
+      });
 
-    const newSocket = io("http://localhost:3000", {
-      transports: ["websocket"],
-      query: { username },
-    });
+      setSocket(newSocket);
 
-    setSocket(newSocket);
+      newSocket.on("connect", () => {
+        console.log("connected");
+      });
 
-    newSocket.on("connect", () => {
-      console.log("connected");
-    });
+      newSocket.on("chat message", (data) => {
+        console.log(`[${data.username}]: ${data.message}`);
+        setMessages((prevMessages) => ({
+          ...prevMessages,
+          [selectedChatId!]: [...(prevMessages[selectedChatId!] || []), { username: data.username, message: data.message, timestamp: data.timestamp }],
+        }));
+      });
 
-    newSocket.on("chat message", (data) => {
-      console.log(`[${data.username}]: ${data.message}`);
-      setMessages((prevMessages) => ({
-        ...prevMessages,
-        [selectedChatId!]: [...(prevMessages[selectedChatId!] || []), { username: data.username, message: data.message, timestamp: data.timestamp }],
-      }));
-    });
+      newSocket.on("active users", (users: string[]) => {
+        console.log("Active users:", users);
+        setActiveUsers(users);
+      });
 
-    newSocket.on("active users", (users: string[]) => {
-      console.log("Active users:", users);
-      setActiveUsers(users);
-    });
-
-    return () => {
-      // disconnect socket and abort fetch when component unmounts
-      newSocket.disconnect();
-      controller.abort();
-    };
+      return () => {
+        // disconnect socket and abort fetch when component unmounts
+        newSocket.disconnect();
+        controller.abort();
+      };
+    }
   }, [username, setSocket, selectedChatId]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
