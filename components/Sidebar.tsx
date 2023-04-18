@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ChatList from "./ChatList";
 import { signOut, useSession } from "next-auth/react";
 import router from "next/router";
@@ -51,11 +51,78 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
     setSearchQuery(event.target.value);
   };
 
+  const [chatListHeight, setChatListHeight] = useState("calc(100vh - 12.75rem)");
+  const [sidebarListHeight, setSidebarListHeight] = useState("");
+
+  const chatListContainerRef = useRef(null);
+  const sidebarListContainerRef = useRef(null);
+
+  const getWindowWidth = () => {
+    return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  };
+
+  useEffect(() => {
+    const updateChatListHeight = () => {
+      let topBarHeight = 4;
+      const searchHeight = 4;
+      const profileSectionHeight = 4;
+      if (getWindowWidth() < 720) {
+        // Change 640 to the breakpoint you need
+        topBarHeight = 4; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+      }
+      if (getWindowWidth() > 720) {
+        // Change 640 to the breakpoint you need
+        topBarHeight = 5; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+      }
+      if (getWindowWidth() > 960) {
+        // Change 640 to the breakpoint you need
+        topBarHeight = 6; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+      }
+
+      setChatListHeight(`calc(100vh - ${topBarHeight + profileSectionHeight + searchHeight}rem)`);
+    };
+
+    updateChatListHeight();
+    window.addEventListener("resize", updateChatListHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateChatListHeight);
+    };
+  }, []);
+
+  useEffect(() => {
+    const updateSidebarListHeight = () => {
+      let topBarHeight = 4;
+      if (getWindowWidth() < 720) {
+        // Change 640 to the breakpoint you need
+        topBarHeight = 4; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+      }
+      if (getWindowWidth() > 720) {
+        // Change 640 to the breakpoint you need
+        topBarHeight = 5; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+      }
+      if (getWindowWidth() > 960) {
+        // Change 640 to the breakpoint you need
+        topBarHeight = 6; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+      }
+
+      setSidebarListHeight(`calc(100vh - ${topBarHeight}rem)`);
+    };
+
+    updateSidebarListHeight();
+    window.addEventListener("resize", updateSidebarListHeight);
+
+    return () => {
+      window.removeEventListener("resize", updateSidebarListHeight);
+    };
+  }, []);
+
   const filteredChats = chatsData.filter((chat) => chat.name.toLowerCase().includes(searchQuery.toLowerCase())).sort(sortByTimestampDesc);
   return (
     <>
       <ThemeProvider>
         <div
+          ref={sidebarListContainerRef}
           className={`${
             selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"
           } fixed left-0 border-r border-gray-300 h-full flex flex-col`}
@@ -73,9 +140,11 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
             </div>
           </div>
           <div
+            ref={chatListContainerRef}
             className={`${
               selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"
-            } flex-grow border-gray-300 bottom-16 md:border-none md:z-0 -z-10 border flex flex-col fixed overflow-y-auto w-1/5 md:w-2/12 md:h-[calc(100vh-13.75rem)] h-[calc(100vh-12.75rem)]`}
+            } flex-grow border-gray-300 bottom-16 md:border-none md:z-0 -z-10 border flex flex-col fixed overflow-y-auto w-1/5 md:w-2/12`}
+            style={{ height: chatListHeight }}
           >
             <ChatList chatsData={filteredChats} selectedChatData={selectedChatData} onChatSelect={onChatSelect} />
           </div>

@@ -198,7 +198,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
 
     fetchData();
 
-    const newSocket = io("https://localhost:3000", {
+    const newSocket = io("http://localhost:3000", {
       transports: ["websocket"],
       query: { username },
     });
@@ -271,9 +271,27 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
     }
   }, [session, fetchChatsData, isModalOpen]);
 
+  const getWindowWidth = () => {
+    return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+  };
+
   const adjustMessageListHeight = () => {
-    const topbarHeight = 8.75; // Adjust this value according to your topbar height in rem
+    let topbarHeight = 8.75; // Adjust this value according to your topbar height in rem
     const inputHeight = 4; // Adjust this value according to your input height in rem
+
+    if (getWindowWidth() < 720) {
+      // Change 640 to the breakpoint you need
+      topbarHeight = 4; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+    }
+    if (getWindowWidth() > 720) {
+      // Change 640 to the breakpoint you need
+      topbarHeight = 5; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+    }
+    if (getWindowWidth() > 960) {
+      // Change 640 to the breakpoint you need
+      topbarHeight = 6; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+    }
+
     const messageListHeight = `calc(100vh - ${topbarHeight + inputHeight}rem)`;
 
     if (messageListContainerRef.current) {
@@ -282,6 +300,15 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
   };
 
   const messageListContainerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    adjustMessageListHeight();
+    window.addEventListener("resize", adjustMessageListHeight);
+
+    return () => {
+      window.removeEventListener("resize", adjustMessageListHeight);
+    };
+  }, []);
 
   if (status === "loading") {
     return <p>Loading...</p>;
@@ -292,7 +319,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
     return (
       <div className="flex flex-col h-screen">
         <TopBar selectedChatData={selectedChatData} onCloseChat={handleCloseChat} onOpenNewChat={() => setIsModalOpen(true)} />
-        <div className="flex h-full ">
+        <div className="flex h-full">
           <Sidebar chatsData={chatsData} selectedChatData={selectedChatData} onChatSelect={handleChatSelect} />
           <div
             className={`${
@@ -368,14 +395,6 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
       </div>
     );
   }
-  useEffect(() => {
-    adjustMessageListHeight();
-    window.addEventListener("resize", adjustMessageListHeight);
-
-    return () => {
-      window.removeEventListener("resize", adjustMessageListHeight);
-    };
-  }, []);
 };
 
 export default Chat;
