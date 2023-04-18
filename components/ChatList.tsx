@@ -10,6 +10,7 @@ type ChatItem = {
   lastMessage: string;
   lastMessageTimestamp: string;
   hasNotification: boolean;
+  users: string[];
   isGroup: boolean;
 };
 
@@ -19,6 +20,7 @@ interface ChatData {
   name: string;
   username: string;
   isGroup: boolean;
+  users: string[];
   isOnline: boolean;
 }
 
@@ -28,17 +30,10 @@ interface ChatListProps {
   onChatSelect: (selectedChatData: ChatData) => void;
 }
 
-const sortByTimestampDesc = (a: ChatItem, b: ChatItem) => {
-  const dateA = a.lastMessageTimestamp ? new Date(a.lastMessageTimestamp) : new Date(0);
-  const dateB = b.lastMessageTimestamp ? new Date(b.lastMessageTimestamp) : new Date(0);
-
-  return dateB.getTime() - dateA.getTime();
-};
-
 const ChatList: React.FC<ChatListProps> = ({ chatsData, selectedChatData, onChatSelect }) => {
   return (
     <div className="flex-grow w-full">
-      {chatsData.sort(sortByTimestampDesc).map((chat) => (
+      {chatsData.map((chat) => (
         <ChatCard
           key={chat.id}
           id={chat.id.toString()}
@@ -51,6 +46,7 @@ const ChatList: React.FC<ChatListProps> = ({ chatsData, selectedChatData, onChat
           hasNotification={chat.hasNotification}
           isSelected={chat.id.toString() === selectedChatData?.id}
           onSelect={onChatSelect}
+          users={chat.users}
           isGroup={chat.isGroup}
         />
       ))}

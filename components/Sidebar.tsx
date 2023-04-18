@@ -14,6 +14,7 @@ interface ChatData {
   username: string;
   isGroup: boolean;
   isOnline: boolean;
+  users: string[];
 }
 
 type ChatItem = {
@@ -26,6 +27,7 @@ type ChatItem = {
   lastMessageTimestamp: string;
   hasNotification: boolean;
   isGroup: boolean;
+  users: string[];
 };
 
 interface SidebarProps {
@@ -53,38 +55,33 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
   return (
     <>
       <ThemeProvider>
-        <Head>
-          <title>Chat Room</title>
-        </Head>
-        <div className="w-1/5 md:w-2/12 fixed left-0 border-r border-gray-300 h-full flex flex-col">
-          <div className="flex flex-row p-3 md:p-5 items-center w-full h-14 md:h-16 lg:h-20">
-            <img className="h-full w-auto" src="logo.png" alt="" />
-            <div className="p-2 md:p-4 hidden sm:inline sm:text-xs md:text-sm lg:text-lg xl:text-xl font-semibold text-gray-500">Make-It-All</div>
-          </div>
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-gray-400"></div>
-            <div className="flex-shrink mx-4 font-semibold text-black">Messages</div>
-            <div className="flex-grow border-t border-gray-400"></div>
-          </div>
-          <div>
-            <div className="p-2  mb-3">
+        <div
+          className={`${
+            selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"
+          } fixed left-0 border-r border-gray-300 h-full flex flex-col`}
+        >
+          <div className="w-full">
+            <div className="p-2 my-3 h-12 flex items-center justify-center fixed left-0 w-full sm:w-1/5 md:w-2/12 ">
               <Input
                 type="text"
                 icon={<FontAwesomeIcon icon={faSearch} className="text-gray-400" />}
-                label="Find or start a conversation"
+                label="Find a conversation"
                 className="w-full px-3 py-2 rounded-md border border-gray-300 placeholder-gray-400 focus:outline-none "
                 value={searchQuery}
                 onChange={handleSearchInputChange}
               />
             </div>
-            <div className="flex-grow border-t border-gray-400"></div>
           </div>
-          <div className="flex-grow flex flex-col h-full overflow-y-auto h-[calc(100vh - 4rem)]">
+          <div
+            className={`${
+              selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"
+            } flex-grow bottom-16 md:border-none md:z-0 -z-10 border-t border-gray-500 flex flex-col fixed overflow-y-auto w-1/5 md:w-2/12 md:h-[calc(100vh-13.75rem)] h-[calc(100vh-12.75rem)]`}
+          >
             <ChatList chatsData={filteredChats} selectedChatData={selectedChatData} onChatSelect={onChatSelect} />
           </div>
-          <div className="h-16 border-t border-gray-300 py-3 px-4 flex items-center">
+          <div className=" sm:w-1/5 md:w-2/12 h-16 border border-gray-300 py-3 px-4 flex w-full items-center fixed bottom-0 left-0">
             <img
-              src="https://via.placeholder.com/40" // Replace with the actual profile image URL
+              src={session?.user.image || "default-avatar.svg"} // Replace with the actual profile image URL
               alt="Profile"
               className="w-10 h-10 rounded-full mr-3"
             />

@@ -63,6 +63,7 @@ const getChatsData = async (userId: string, activeUsers: any[]) => {
         lastMessage: lastMessage ? lastMessage.content : "New Conversation, say hi!",
         lastMessageTimestamp: lastMessage ? lastMessage.createdAt.toISOString() : "null",
         hasNotification: hasNotification, // You can replace this with the actual notification logic
+        users: otherMembers.map((member) => member.user),
         isGroup: true,
       };
     } else {
@@ -75,6 +76,7 @@ const getChatsData = async (userId: string, activeUsers: any[]) => {
         lastMessage: lastMessage ? lastMessage.content : "New Conversation, say hi!",
         lastMessageTimestamp: lastMessage ? lastMessage.createdAt.toISOString() : "null",
         hasNotification: hasNotification, // You can replace this with the actual notification logic
+        users: otherMembers.map((member) => member.user),
         isGroup: false,
       };
     }

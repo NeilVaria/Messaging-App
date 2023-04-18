@@ -7,6 +7,7 @@ interface ChatData {
   username: string;
   isGroup: boolean;
   isOnline: boolean;
+  users: string[];
 }
 
 interface ChatCardProps {
@@ -20,6 +21,7 @@ interface ChatCardProps {
   lastMessageTimestamp: string;
   hasNotification: boolean;
   isSelected: boolean;
+  users: string[];
   onSelect: (ChatData: ChatData) => void;
 }
 
@@ -34,6 +36,7 @@ const ChatCard: React.FC<ChatCardProps> = ({
   lastMessageTimestamp,
   hasNotification,
   isSelected,
+  users,
   onSelect,
 }) => {
   const timeAgo = (date: string) => {
@@ -71,9 +74,10 @@ const ChatCard: React.FC<ChatCardProps> = ({
     username,
     isGroup,
     isOnline,
+    users,
   };
 
-  const cardClass = isSelected ? "bg-blue-50 border-blue-500 border-l-8 pl-0.5 w-full" : "pl-2.5 bg-white border-gray-300 border-b hover:bg-blue-50";
+  const cardClass = isSelected ? "bg-blue-50 border-blue-500 border-l-8 pl-0.5 w-full" : "md:pl-2.5 bg-white border-gray-300 border-b md:hover:bg-blue-50";
 
   return (
     <div className={`relative flex p-3 cursor-pointer ${cardClass}`} onClick={() => onSelect(chatData)}>
