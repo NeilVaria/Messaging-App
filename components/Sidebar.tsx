@@ -75,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
           <div
             className={`${
               selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"
-            } flex-grow bottom-16 md:border-none md:z-0 -z-10 border-t border-gray-500 flex flex-col fixed overflow-y-auto w-1/5 md:w-2/12 md:h-[calc(100vh-13.75rem)] h-[calc(100vh-12.75rem)]`}
+            } flex-grow border-gray-300 bottom-16 md:border-none md:z-0 -z-10 border flex flex-col fixed overflow-y-auto w-1/5 md:w-2/12 md:h-[calc(100vh-13.75rem)] h-[calc(100vh-12.75rem)]`}
           >
             <ChatList chatsData={filteredChats} selectedChatData={selectedChatData} onChatSelect={onChatSelect} />
           </div>
