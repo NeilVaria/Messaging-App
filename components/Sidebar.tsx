@@ -92,21 +92,21 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
 
   useEffect(() => {
     const updateSidebarListHeight = () => {
-      let topBarHeight = 4;
+      let _topBarHeight = 4;
       if (getWindowWidth() < 720) {
         // Change 640 to the breakpoint you need
-        topBarHeight = 4; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+        _topBarHeight = 4; // Set the topBarHeight to 6 when the window width is less than the breakpoint
       }
       if (getWindowWidth() > 720) {
         // Change 640 to the breakpoint you need
-        topBarHeight = 5; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+        _topBarHeight = 5; // Set the topBarHeight to 6 when the window width is less than the breakpoint
       }
       if (getWindowWidth() > 960) {
         // Change 640 to the breakpoint you need
-        topBarHeight = 6; // Set the topBarHeight to 6 when the window width is less than the breakpoint
+        _topBarHeight = 6; // Set the topBarHeight to 6 when the window width is less than the breakpoint
       }
 
-      setSidebarListHeight(`calc(100vh - ${topBarHeight}rem)`);
+      setSidebarListHeight(`calc(100vh - ${_topBarHeight}rem)`);
     };
 
     updateSidebarListHeight();
@@ -123,9 +123,8 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
       <ThemeProvider>
         <div
           ref={sidebarListContainerRef}
-          className={`${
-            selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"
-          } fixed left-0 border-r border-gray-300 h-full flex flex-col`}
+          className={`${selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"} fixed left-0 border-r border-gray-300 flex flex-col`}
+          style={{ height: sidebarListHeight }}
         >
           <div className="w-full">
             <div className="p-2 my-3 h-12 flex items-center justify-center fixed left-0 w-full sm:w-1/5 md:w-2/12 ">
