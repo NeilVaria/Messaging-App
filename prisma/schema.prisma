@@ -1,5 +1,3 @@
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,20 +10,55 @@ datasource db {
 }
 
 model User {
-  id       String    @id @default(cuid())
+  id       String        @id @default(cuid())
   name     String
-  username String    @unique
+  username String        @unique
   role     String
-  email    String    @unique
+  email    String        @unique
   image    String?
   password String
   Message  Message[]
+  RoomMember RoomMember[]
+  MessageSeen MessageSeen[]
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
+  id        Int          @id @default(autoincrement())
   content   String
-  createdAt DateTime @default(now())
+  createdAt DateTime     @default(now())
   authorId  String
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User         @relation(fields: [authorId], references: [id])
+  roomId    String
+  room      Room         @relation(fields: [roomId], references: [id])
+  seenBy    MessageSeen[]
+}
+
+model Room {
+  id       String       @id @default(cuid())
+  name     String?
+  image    String?
+  messages Message[]
+  members  RoomMember[]
+  MessageSeen MessageSeen[]
+}
+
+model RoomMember {
+  roomId String
+  room   Room   @relation(fields: [roomId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([roomId, userId])
+}
+
+model MessageSeen {
+  messageId Int
+  message   Message @relation(fields: [messageId], references: [id])
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+  roomId    String
+  room      Room    @relation(fields: [roomId], references: [id])
+  seen      Boolean
+
+  @@id([messageId, userId, roomId])
 }
