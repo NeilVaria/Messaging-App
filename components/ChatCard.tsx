@@ -77,10 +77,10 @@ const ChatCard: React.FC<ChatCardProps> = ({
     users,
   };
 
-  const cardClass = isSelected ? "bg-blue-50 border-blue-500 border-l-8 pl-0.5 w-full" : "md:pl-2.5 bg-white border-gray-300 border-b md:hover:bg-blue-50";
+  const cardClass = isSelected ? "bg-blue-50 border-blue-500 border-l-8 pl-0.5 w-full" : "md:pl-2.5 bg-white border-gray-300 border md:hover:bg-blue-50";
 
   return (
-    <div className={`relative flex p-3 cursor-pointer ${cardClass}`} onClick={() => onSelect(chatData)}>
+    <div className={`relative flex p-3 cursor-pointer  ${cardClass}`} onClick={() => onSelect(chatData)}>
       <div className="flex flex-row w-full">
         <div className="flex items-center mr-2">
           <div className="w-3 h-3 mb-3">{hasNotification && <div className="bg-blue-500 w-full h-full rounded-full"></div>}</div>
