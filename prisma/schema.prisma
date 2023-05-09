@@ -20,6 +20,8 @@ model User {
   Message  Message[]
   RoomMember RoomMember[]
   MessageSeen MessageSeen[]
+  tasks Tasks[]
+
 }
 
 model Message {
@@ -62,3 +64,29 @@ model MessageSeen {
 
   @@id([messageId, userId, roomId])
 }
+
+model Projects {
+  id             String    @id @unique @default(cuid())
+  name           String
+  description    String
+  tasks          Tasks[]
+  completionDate DateTime?
+  deadline       DateTime
+  completed      Boolean   @default(false)
+}
+
+model Tasks {
+  id          String    @id @unique @default(cuid())
+  name        String
+  description String
+  hours       Int
+  members     User[]
+  project     Projects? @relation(fields: [projectsId], references: [id])
+  dueDate     DateTime
+  completed   Boolean   @default(false)
+  completionDate DateTime?
+  manhours    Int
+  projectsId  String?
+}
+
+
