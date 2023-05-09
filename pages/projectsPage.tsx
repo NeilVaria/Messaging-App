@@ -4,7 +4,6 @@ import { Card, Text, Title } from "@tremor/react";
 import classNames from "classnames";
 import router from "next/router";
 
-
 const projectsData = [
   { id: 1, name: "Project Charlotte", status: "complete" },
   { id: 2, name: "Project Caroline", status: "complete" },
@@ -19,10 +18,7 @@ const Dashboard = () => {
   const [sortOrder, setSortOrder] = useState("asc");
 
   const filteredProjects = projectsData.filter((project) => {
-    if (
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterTerm === "" || project.status === filterTerm)
-    ) {
+    if (project.name.toLowerCase().includes(searchTerm.toLowerCase()) && (filterTerm === "" || project.status === filterTerm)) {
       return true;
     }
     return false;
@@ -50,13 +46,13 @@ const Dashboard = () => {
     return 0;
   });
 
-  const handleSortChange = (event:any) => {
+  const handleSortChange = (event: any) => {
     setSortOrder(event.target.value);
   };
 
-  const handleCardClick = (id:number) => {
+  const handleCardClick = (id: number) => {
     console.log(`Card with ID ${id} clicked`);
-  }
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
@@ -73,11 +69,7 @@ const Dashboard = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
             className="p-2 rounded-l-md w-full md:w-auto md:rounded md:border-l-0 m-2"
           />
-          <select
-            value={filterTerm}
-            onChange={(e) => setFilterTerm(e.target.value)}
-            className="p-2 rounded-md w-full md:w-auto md:rounded-none md:border-l-0"
-          >
+          <select value={filterTerm} onChange={(e) => setFilterTerm(e.target.value)} className="p-2 rounded-md w-full md:w-auto md:rounded-none md:border-l-0">
             <option value="">All</option>
             <option value="complete">Complete</option>
             <option value="incomplete">Incomplete</option>
@@ -89,11 +81,14 @@ const Dashboard = () => {
           <li className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 px-4 mb-4" key={project.id}>
             <Card onClick={() => router.push("/analytics")} className="cursor-pointer">
               <Title>{project.name}</Title>
-              <Text className={classNames({
-                "text-green-500": project.status === "complete",
-                "text-red-500": project.status === "incomplete",
-              })}
-              >Status: {project.status}</Text>
+              <Text
+                className={classNames({
+                  "text-green-500": project.status === "complete",
+                  "text-red-500": project.status === "incomplete",
+                })}
+              >
+                Status: {project.status}
+              </Text>
             </Card>
           </li>
         ))}
@@ -103,4 +98,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
