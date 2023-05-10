@@ -19,6 +19,7 @@
     "@prisma/client": "^4.11.0",
     "@tremor/react": "^2.4.0",
     "@types/react-dom": "18.0.11",
+    "@types/react-modal": "^3.16.0",
     "bcrypt": "^5.1.0",
     "chart.js": "^4.3.0",
     "chartjs": "^0.3.24",
@@ -38,6 +39,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.0",
+    "react-modal": "^3.16.1",
     "react-select": "^5.7.2",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
