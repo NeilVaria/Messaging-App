@@ -14,6 +14,7 @@ export interface ProjectData {
   completed?: boolean;
   memberCount: number;
   progress: number;
+  overdue: String
 }
 
 interface TasksWithMembers extends Tasks {
@@ -42,6 +43,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const progress = Math.round((manhoursCompleted / totalManhours) * 100);
 
+      const overdue = isOverdue(project);
+
+      const status = getStatus(project.completed, overdue);
+      
+
       return {
         id: project.id,
         name: project.name,
@@ -52,6 +58,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         completed: project.completed,
         memberCount,
         progress,
+        overdue,
+        status,
       };
     });
 
@@ -69,13 +77,34 @@ function getMemberCount(tasks: TasksWithMembers[]) {
 }
 
 function calculateProgress(tasks: TasksWithMembers[]) {
-  const totalManhours = tasks.reduce((sum, task) => sum + task.manhours, 0);
+  const totalManhours = tasks.reduce((sum, task) => sum + task.hours, 0);
   const manhoursCompleted = tasks.reduce((sum, task) => {
-    if (task.completed && task.completionDate) {
       return sum + task.manhours;
-    } else {
-      return sum;
-    }
   }, 0);
+
   return { manhoursCompleted, totalManhours };
 }
+
+function isOverdue(project: any) {
+  if (!project.completed) {
+    const deadlineDate = new Date(project.deadline);
+    const today = new Date();
+    if (deadlineDate < today) {
+      return "Overdue";
+    }
+  }
+  return "";
+}
+
+function getStatus(completed?: boolean, overdue?: string) {
+  if (completed) {
+    return "Complete";
+  } else if (overdue=="Overdue") {
+    return "Overdue";
+  } else {
+    return "Incomplete";
+  }
+}
+
+
+

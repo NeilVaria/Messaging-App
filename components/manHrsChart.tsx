@@ -56,28 +56,6 @@ export default function MyDemo(){
     // console.log(users[0]);
     var userItems = [];
 
-    // const cities = [
-    //     {
-    //         label: 'All', code: 'all',
-    //         items: [
-    //             { name: 'All', id: 'all' }
-    //         ]
-    //     },
-    //     {
-    //         label: 'Projects', code: 'projects',
-    //         items: [
-    //             { label: 'Project 1', id: 'project1' },
-    //             { label: 'Project 2', id: 'project2' },
-    //             { label: 'Project 3', id: 'project3' },
-    //             { label: 'Project 4', id: 'project4' }
-    //         ]
-    //     },
-        // {
-        //     label: 'Employee', code: 'Emp',
-        //     items: users
-        // }
-    // ];
-
     const [selectData, setSelectData] = useState([ {
         name: '', id: '',
     }]);
@@ -118,7 +96,7 @@ export default function MyDemo(){
                 // console.log(tasks[j].dueDate.slice(5,7));
                 if (filter != undefined){
                 if(filter == "all" || tasks[j].projectsId == filter.id || tasks[j].members[0].id == filter.id){
-                    if(tasks[j].completed && tasks[j].completionDate.slice(5,7) == xAxis[i]){
+                    if(tasks[j].completed && tasks[j].completionDate!=null && tasks[j].completionDate.slice(5,7) == xAxis[i]){
                         manHrsAct+=tasks[j].hours;
                     }
                     if(tasks[j].dueDate.slice(5,7)== xAxis[i]){
@@ -157,10 +135,16 @@ export default function MyDemo(){
     }
 
     useEffect(() => {
-        fetch("/api/taskData").then((response)=>response.json()).then((data)=>setTasks(data));
-        fetch("/api/userData").then((response)=>response.json()).then((data)=>setUsers(data));
-        fetch("/api/projectData").then((response)=>response.json()).then((data)=>setProjects(data));
-
+        Promise.all([
+            fetch("/api/taskData").then((response) => response.json()),
+            fetch("/api/userData").then((response) => response.json()),
+            fetch("/api/projectData").then((response) => response.json())
+          ]).then(([taskData, userData, projectData]) => {
+            setTasks(taskData);
+            setUsers(userData);
+            setProjects(projectData);
+            setSelectData(projectData);
+          });
         const select = document.getElementById("chartSelect");
 //         select?.addEventListener("change", () => {
 //             // setSelectedCity(select)

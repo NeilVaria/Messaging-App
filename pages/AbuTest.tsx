@@ -2,10 +2,16 @@ import { useState, useEffect } from "react";
 import ProjectsCard from "@/components/ProjectCard";
 import ProjectList from "@/components/ProjectList";
 import { ProjectData } from "./api/projectData";
+import EmpTbl from '@/components/EmployeeTbl';
+import EmpTblSingle from '@/components/EmployeeTbl';
+import MyDemo from "@/components/manHrsChart";
+import { Card, Dropdown, DropdownItem, Text, Title } from "@tremor/react";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "complete" | "overdue" | "incomplete">("all");
+  const [progressSortOrder, setProgressSortOrder] = useState<"ascending" | "descending">("ascending");
   const [filteredProjects, setFilteredProjects] = useState<ProjectData[]>([]);
 
   useEffect(() => {
@@ -19,13 +25,44 @@ export default function ProjectsPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = projects.filter((project) => project.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    let filtered = [...projects];
+
+    // Filter based on status
+    if (statusFilter === "complete") {
+      filtered = filtered.filter((project) => project.progress === 100);
+    } else if (statusFilter === "overdue") {
+      filtered = filtered.filter((project) => project.progress < 100 && new Date(project.deadline) < new Date());
+    } else if (statusFilter === "incomplete") {
+      filtered = filtered.filter((project) => project.progress < 100);
+    }
+
+    // Filter based on search term
+    if (searchTerm !== "") {
+      filtered = filtered.filter((project) => project.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
+    // Sort based on progress
+    if (progressSortOrder === "ascending") {
+      filtered.sort((a, b) => a.progress - b.progress);
+    } else if (progressSortOrder === "descending") {
+      filtered.sort((a, b) => b.progress - a.progress);
+    }
+
     setFilteredProjects(filtered);
-  }, [projects, searchTerm]);
+  }, [projects, statusFilter, searchTerm, progressSortOrder]);
 
   function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchTerm(e.target.value);
   }
+
+  function handleStatusFilter(e: React.ChangeEvent<HTMLSelectElement>) {
+    setStatusFilter(e.target.value as typeof statusFilter);
+  }
+
+  function handleProgressSortOrder(e: React.ChangeEvent<HTMLSelectElement>) {
+    setProgressSortOrder(e.target.value as typeof progressSortOrder);
+  }
+
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -38,14 +75,45 @@ export default function ProjectsPage() {
           value={searchTerm}
           onChange={handleSearch}
         />
-        <select className="border border-gray-300 px-4 py-2 rounded-md w-1/4" onChange={() => {}}>
-          <option value="">All categories</option>
-          <option value="category1">Category 1</option>
-          <option value="category2">Category 2</option>
-          <option value="category3">Category 3</option>
+        <select
+          className="border border-gray-300 px-4 py-2 rounded-md w-1/4"
+          value={statusFilter}
+          onChange={handleStatusFilter}
+        >
+          <option value="all">All projects</option>
+          <option value="complete">Completed projects</option>
+          <option value="overdue">Overdue projects</option>
+          <option value="incomplete">Incomplete projects</option>
+        </select>
+        <select
+          className="border border-gray-300 px-4 py-2 rounded-md w-1/4"
+          value={progressSortOrder}
+          onChange={handleProgressSortOrder}
+        >
+          <option value="asc">Sort by ascending progress</option>
+          <option value="desc">Sort by descending progress</option>
         </select>
       </div>
-      <ProjectList projects={filteredProjects} />
+      <div className="grid grid-cols-5 gap-6 mt-6">
+        <div className="flex col-span-5">
+          <ProjectList projects={filteredProjects} />
+        </div>
+        <div className="col-span-3">
+                <Card className="h-4/5 overflow-auto">
+                  <EmpTbl />
+                </Card>
+              </div>
+              <div className="col-span-2">
+                <Card className="h-4/5 overflow-auto">
+                  <MyDemo/>
+                </Card>
+              </div>
+              <div className="col-span-3">
+              <EmpTblSingle />
+              </div>
+        </div>
     </div>
+    
   );
-}
+  
+  }
