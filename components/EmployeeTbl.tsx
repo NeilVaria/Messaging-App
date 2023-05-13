@@ -17,6 +17,8 @@ import "primeicons/primeicons.css";
 import { Chart } from 'primereact/chart';
 import { select } from "@material-tailwind/react";
 import { compileFunction } from "vm";
+import { ro } from "date-fns/locale";
+import router from "next/router";
 
 type Task = {
     id: string;
@@ -70,7 +72,7 @@ export default function EmpTbl(){
     ];
 
     function empSelect(emp: any){
-        console.log(emp);
+        router.push(`/employees/${emp.id}`);
     }
 
     useEffect(() => {
@@ -109,7 +111,6 @@ export default function EmpTbl(){
                             todo=todo+1;
                         }
                         var dueDate = new Date(taskData[m].dueDate);
-
                         if(!taskData[m].completed && today>dueDate){
                             overdue1=overdue1+1;
                             late=late+1;                   
@@ -132,7 +133,7 @@ export default function EmpTbl(){
             }else {
                 rating1 = "NA"
             }
-            // console.log(overdue1);
+            
             return {current: todo, overdue: overdue1, rating: rating1};
             }
           });
@@ -145,7 +146,7 @@ export default function EmpTbl(){
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
-        console.log(products)
+        
 
     }, []);
 

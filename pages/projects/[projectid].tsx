@@ -7,6 +7,7 @@ import DonutChart from '@/components/totalTasks';
 import EmpTblSingle from '@/components/EmpTblSingle';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import Head from 'next/head';
 
 interface Task {
   id: string;
@@ -83,7 +84,7 @@ const ProjectPage: React.FC = () => {
   const { name, description, taskCount, deadline, progress, id } = projectData;
 
   return (
-    <div className="bg-gray-100 m-0 p-0">
+    <><Head><title>{name}</title></Head><div className="bg-gray-100 m-0 p-0">
       <div className="m-3">
         <FontAwesomeIcon icon={faHome} onClick={() => router.push("/AbuTest")} className="text-gray-600 hover:text-gray-800 cursor-pointer" />
 
@@ -171,7 +172,7 @@ const ProjectPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div></>
   );
 };
 

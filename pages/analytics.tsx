@@ -1,118 +1,120 @@
-import React from 'react'
-import { useState } from "react";
-import DonutChart from '@/components/totalTasks';
-import MyDemo from '@/components/manHrsChart';
-import router from "next/router";
-import { ThemeProvider } from "@material-tailwind/react";
-import Head from "next/head";
+import { useState, useEffect } from "react";
+import ProjectsCard from "@/components/ProjectCard";
+import ProjectList from "@/components/ProjectList";
+import { ProjectData } from "./api/projectData";
+import EmpTbl from '@/components/EmployeeTbl';
+import EmpTblSingle from '@/components/EmployeeTbl';
+import MyDemo from "@/components/manHrsChart";
 import { Card, Dropdown, DropdownItem, Text, Title } from "@tremor/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome } from "@fortawesome/free-solid-svg-icons";
-import ProjectCard from '@/components/ProjectCard';
+import Head from "next/head";
 
-const projects = [
-  { name: 'Project A', actualCompletionDate: '2023-09-20', predictedCompletionDate: '2023-04-01' },
-  { name: 'Project B', actualCompletionDate: '2023-05-05', predictedCompletionDate: '2023-06-04' },
-  { name: 'Project C', actualCompletionDate: '2023-01-18', predictedCompletionDate: '2023-02-25' },
-];
+export default function ProjectsPage() {
+  const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [statusFilter, setStatusFilter] = useState<"all" | "complete" | "overdue" | "incomplete">("all");
+  const [progressSortOrder, setProgressSortOrder] = useState<"ascending" | "descending">("ascending");
+  const [filteredProjects, setFilteredProjects] = useState<ProjectData[]>([]);
 
-export default function Home() {
-  const [selectedProject, setSelectedProject] = useState(projects[0].name);
+  useEffect(() => {
+    async function fetchProjects() {
+      const res = await fetch("/api/projectData");
+      const projectData = await res.json();
+      setProjects(projectData);
+    }
+
+    fetchProjects();
+  }, []);
+
+  useEffect(() => {
+    let filtered = [...projects];
+
+    // Filter based on status
+    if (statusFilter === "complete") {
+      filtered = filtered.filter((project) => project.progress === 100);
+    } else if (statusFilter === "overdue") {
+      filtered = filtered.filter((project) => project.progress < 100 && new Date(project.deadline) < new Date());
+    } else if (statusFilter === "incomplete") {
+      filtered = filtered.filter((project) => project.progress < 100);
+    }
+
+    // Filter based on search term
+    if (searchTerm !== "") {
+      filtered = filtered.filter((project) => project.name.toLowerCase().includes(searchTerm.toLowerCase()));
+    }
+
+    // Sort based on progress
+    if (progressSortOrder === "ascending") {
+      filtered.sort((a, b) => a.progress - b.progress);
+    } else if (progressSortOrder === "descending") {
+      filtered.sort((a, b) => b.progress - a.progress);
+    }
+
+    setFilteredProjects(filtered);
+  }, [projects, statusFilter, searchTerm, progressSortOrder]);
+
+  function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchTerm(e.target.value);
+  }
+
+  function handleStatusFilter(e: React.ChangeEvent<HTMLSelectElement>) {
+    setStatusFilter(e.target.value as typeof statusFilter);
+  }
+
+  function handleProgressSortOrder(e: React.ChangeEvent<HTMLSelectElement>) {
+    setProgressSortOrder(e.target.value as typeof progressSortOrder);
+  }
 
 
-
-  const handleProjectChange = (event: any) => {
-    setSelectedProject(event.target.value);
-  };
-
-
-
-  const projectAData = {
-    label: 'Project A',
-    labels: ['Complete', 'Incomplete', 'Overdue Complete', 'Overdue Incomplete'],
-    datasets: [{
-      label: 'Tasks',
-      backgroundColor: ['#f1c40f', '#e67e22', '#16a085', '#2980b9'],
-      data: [1, 3, 1, 1]
-    },
-    ],
-  };
-
-  const projectBData = {
-    label: 'Project B',
-    labels: ['Complete', 'Incomplete', 'Overdue Complete', 'Overdue Incomplete'],
-    datasets: [{
-      label: 'Tasks',
-      backgroundColor: ['#f1c40f', '#e67e22', '#16a085', '#2980b9'],
-      data: [8, 2, 3, 6]
-    },
-    ],
-  };
-
-  const projectCData = {
-    label: 'Project C',
-    labels: ['Complete', 'Incomplete', 'Overdue Complete', 'Overdue Incomplete'],
-    datasets: [{
-      label: 'Tasks',
-      backgroundColor: ['#f1c40f', '#e67e22', '#16a085', '#2980b9'],
-      data: [4, 6, 11, 9]
-    },
-    ],
-  };
-
-    return (
-      <>
-        <ThemeProvider>
-          <Head>
-            <title>Analytics</title>
-          </Head>
-          <main className="w-screen h-full justify-center bg-gray-100 p-6 sm:p-10">
-          <div className="flex justify-between items-center space-x-3">
-            <div className="flex space-x-3">
-              <FontAwesomeIcon icon={faHome} onClick={() => router.push("/")} className="text-gray-600 hover:text-gray-800 cursor-pointer" />
-              <Title>Dashboard</Title>
-            </div>
-            <Dropdown className="flex pl-6 w-1/2 justify-right col-span-3">
-              <DropdownItem value="1" text={" Show all"} />
-              <DropdownItem value="2" text={"Project A"} />
-              <DropdownItem value="3" text={"Project B"} />
-              <DropdownItem value="4" text={"Project C"} />
-            </Dropdown>
-          </div>
-
-            <div className="grid grid-cols-3 gap-6 mt-6">
-              <div className="flex col-span-1">
-                <Card>
-                  Deadline
-                </Card>
-              </div>
-              <div className="flex col-span-1">
-                <Card>
-                  Man Hours
-                </Card>
-              </div>
-              <div className="flex col-span-1">
-                <Card>
-                  Total Task
-                </Card>
-              </div>
-              <div className="col-span-2">
-                <Card className="h-2/5 overflow-auto">
-                  <MyDemo />
-                </Card>
-              </div>
-              <div className="col-span-1">
-                <Card className="h-2/5 overflow-auto">
-                  <Text className="mb-2 text-gray-800">Task Performance</Text>
-                  <DonutChart/>
-                </Card>
-              </div>
-            </div>
-
-          </main>
-        </ThemeProvider>
-      </>
-      
-    );
-
-};       
+  return (
+    <>
+    <Head>
+      <title>Analytics</title>
+    </Head>
+      <div className="container mx-auto px-4 py-6">
+      <h1 className="text-3xl font-bold mb-6">Projects</h1>
+      <div className="flex justify-between items-center mb-6">
+        <input
+          type="text"
+          placeholder="Search projects"
+          className="border border-gray-300 px-4 py-2 rounded-md w-1/2 mr-4"
+          value={searchTerm}
+          onChange={handleSearch} />
+        <select
+          className="border border-gray-300 px-4 py-2 rounded-md w-1/4"
+          value={statusFilter}
+          onChange={handleStatusFilter}
+        >
+          <option value="all">All projects</option>
+          <option value="complete">Completed projects</option>
+          <option value="overdue">Overdue projects</option>
+          <option value="incomplete">Incomplete projects</option>
+        </select>
+        <select
+          className="border border-gray-300 px-4 py-2 rounded-md w-1/4"
+          value={progressSortOrder}
+          onChange={handleProgressSortOrder}
+        >
+          <option value="ascendingending">Sort by ascending progress</option>
+          <option value="descendingending">Sort by descending progress</option>
+        </select>
+      </div>
+      <div className="grid grid-cols-5 gap-6 mt-6">
+        <div className="flex col-span-5">
+          <ProjectList projects={filteredProjects} />
+        </div>
+        <div className="col-span-3">
+          <Card className="h-4/5 overflow-auto">
+            <EmpTbl />
+          </Card>
+        </div>
+        <div className="col-span-2">
+          <Card className="h-4/5 overflow-auto">
+            <MyDemo />
+          </Card>
+        </div>
+      </div>
+    </div></>
+    
+  );
+  
+  }

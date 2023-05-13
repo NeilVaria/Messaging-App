@@ -17,6 +17,8 @@ import "primeicons/primeicons.css";
 import { Chart } from 'primereact/chart';
 import { select } from "@material-tailwind/react";
 import { compileFunction } from "vm";
+import { ro } from "date-fns/locale";
+import router from "next/router";
 
 type Task = {
     id: string;
@@ -67,7 +69,7 @@ export default function EmpTblSingle({ projectsId }: { projectsId: string }){
     ];
 
     function empSelect(emp: any){
-        console.log(emp);
+        router.push(`/employees/${emp.id}`);
     }
 
     useEffect(() => {
@@ -141,7 +143,6 @@ export default function EmpTblSingle({ projectsId }: { projectsId: string }){
     }, []);
 
     return (
-        <>
             <div className="card">
             <DataTable value={products} tableStyle={{ minWidth: '20rem' }} selectionMode="single" selection={selectedProduct}
         onSelectionChange={(e) => empSelect(e.value)} dataKey="id">
@@ -150,6 +151,5 @@ export default function EmpTblSingle({ projectsId }: { projectsId: string }){
                 ))}
             </DataTable>
         </div>
-        </>
     )
 }
