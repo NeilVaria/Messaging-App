@@ -20,7 +20,6 @@ model User {
   Message  Message[]
   RoomMember RoomMember[]
   MessageSeen MessageSeen[]
-  projects Projects[]
   tasks Tasks[]
 
 }
@@ -69,8 +68,8 @@ model MessageSeen {
 model Projects {
   id             String    @id @unique @default(cuid())
   name           String
+  description    String
   tasks          Tasks[]
-  members        User[]
   completionDate DateTime?
   deadline       DateTime
   completed      Boolean   @default(false)
@@ -85,6 +84,7 @@ model Tasks {
   project     Projects? @relation(fields: [projectsId], references: [id])
   dueDate     DateTime
   completed   Boolean   @default(false)
+  completionDate DateTime?
   manhours    Int
   projectsId  String?
 }
