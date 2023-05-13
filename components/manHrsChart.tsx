@@ -140,6 +140,12 @@ export default function MyDemo({ projectsId }: { projectsId: string }){
             if(projectsId=="all"){
                 setSelectData([
                     {id:"all", name:"All"}]);
+                const select = document.getElementById("chartSelect");
+                if(select){
+                    select.style.display = "none";
+                }
+                cityChange({id:"all", name:"All"}, taskData);
+
             }else{
                 const filteredUsers = userData.filter((user:any) => taskData.some((task:any) => task.projectsId === projectsId && task.members[0].id === user.id));
                 for (let p =0; p<projectData.length; p++){
@@ -149,7 +155,6 @@ export default function MyDemo({ projectsId }: { projectsId: string }){
                     }
                 }
             }
-
 
             // setSelectData([
             //     {id:"all", name:"All"},
@@ -199,7 +204,7 @@ export default function MyDemo({ projectsId }: { projectsId: string }){
         <>
              <div className="card flex justify-content-center">
                  {/* <ToggleButton id="toggle" checked={checked} onLabel="Users" offLabel="Projects "onChange={(e) => toggle(e.value)}/> */}
-            <Dropdown id="chartSelect" value={selectedCity} onChange={(e) => cityChange(e.value, tasks)} options={selectData} optionLabel="name" filter showClear filterBy="name"
+                <Dropdown id="chartSelect" value={selectedCity} onChange={(e) => cityChange(e.value, tasks)} options={selectData} optionLabel="name" filter showClear filterBy="name"
                 placeholder="Select" className="w-full md:w-14rem" />
             </div>
             <div className="card">

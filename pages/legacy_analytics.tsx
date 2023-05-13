@@ -98,13 +98,12 @@ export default function Home() {
               </div>
               <div className="col-span-2">
                 <Card className="h-2/5 overflow-auto">
-                  <MyDemo />
+                  <MyDemo projectsId={"all" as string} />
                 </Card>
               </div>
               <div className="col-span-1">
                 <Card className="h-2/5 overflow-auto">
                   <Text className="mb-2 text-gray-800">Task Performance</Text>
-                  <DonutChart/>
                 </Card>
               </div>
             </div>
