@@ -108,9 +108,6 @@ export default function ProjectsPage() {
                   <MyDemo/>
                 </Card>
               </div>
-              <div className="col-span-3">
-              <EmpTblSingle />
-              </div>
         </div>
     </div>
     

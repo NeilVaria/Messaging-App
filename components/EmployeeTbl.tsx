@@ -109,6 +109,7 @@ export default function EmpTbl(){
                             todo=todo+1;
                         }
                         var dueDate = new Date(taskData[m].dueDate);
+
                         if(!taskData[m].completed && today>dueDate){
                             overdue1=overdue1+1;
                             late=late+1;                   
@@ -131,7 +132,7 @@ export default function EmpTbl(){
             }else {
                 rating1 = "NA"
             }
-            
+            // console.log(overdue1);
             return {current: todo, overdue: overdue1, rating: rating1};
             }
           });
