@@ -65,7 +65,7 @@ export default function EmpTbl(){
     const columns: ColumnMeta[] = [
         {field: 'name', header: 'Name'},
         {field: 'current', header: 'Current Tasks'},
-        {field: 'overdue', header: 'Overdue Tasks'},
+        {field: 'overdue', header: 'Overdue Task'},
         {field: 'rating', header: 'Rating'}
     ];
 
@@ -82,8 +82,8 @@ export default function EmpTbl(){
             setTasks(taskData);
             setUsers(userData);
             setProjects(projectData);
-
             let tableData = userData.map((user: any) => {
+
               let userMetrics = getEmpTaskStats(user.id);
               return {
                 ...user,
@@ -124,6 +124,7 @@ export default function EmpTbl(){
                         }
                     }
                 }
+            
             let rating1;
             if(total>0){
                 rating1 = Math.round(ontime/total * 10);
@@ -143,7 +144,10 @@ export default function EmpTbl(){
         const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
         const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
+        console.log(products)
+
     }, []);
+
 
     return (
         <>

@@ -96,7 +96,6 @@ export default function MyDemo(){
                 // console.log(tasks[j].dueDate.slice(5,7));
                 if (filter != undefined){
                 if(filter == "all" || tasks[j].projectsId == filter.id || tasks[j].members[0].id == filter.id){
-                    console.log(tasks[j].completionDate!=null);
                     if(tasks[j].completed && tasks[j].completionDate!=null && tasks[j].completionDate.slice(5,7) == xAxis[i]){
                         manHrsAct+=tasks[j].hours;
                     }

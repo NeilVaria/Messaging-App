@@ -3,7 +3,7 @@ import ProjectsCard from "@/components/ProjectCard";
 import ProjectList from "@/components/ProjectList";
 import { ProjectData } from "./api/projectData";
 import EmpTbl from '@/components/EmployeeTbl';
-// import EmpTblSingle from '@/components/EmployeeTbl';
+import EmpTblSingle from '@/components/EmployeeTbl';
 import MyDemo from "@/components/manHrsChart";
 import { Card, Dropdown, DropdownItem, Text, Title } from "@tremor/react";
 
@@ -90,8 +90,8 @@ export default function ProjectsPage() {
           value={progressSortOrder}
           onChange={handleProgressSortOrder}
         >
-          <option value="asc">Sort by ascending progress</option>
-          <option value="desc">Sort by descending progress</option>
+          <option value="ascendingending">Sort by ascending progress</option>
+          <option value="descendingending">Sort by descending progress</option>
         </select>
       </div>
       <div className="grid grid-cols-5 gap-6 mt-6">
@@ -108,9 +108,9 @@ export default function ProjectsPage() {
                   <MyDemo/>
                 </Card>
               </div>
-              {/* <div className="col-span-3">
-                <EmpTblSingle />
-              </div> */}
+              <div className="col-span-3">
+              <EmpTblSingle />
+              </div>
         </div>
     </div>
     

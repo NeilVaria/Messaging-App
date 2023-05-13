@@ -55,7 +55,7 @@ interface ColumnMeta {
     header: string;
 }
 
-export default function EmpTblSingle(){
+export default function EmpTblSingle({ projectsId }: { projectsId: string }){
     const [tasks, setTasks] = useState<Task[]>([]);
     const [users, setUsers] = useState<User[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
@@ -73,23 +73,20 @@ export default function EmpTblSingle(){
     useEffect(() => {
         Promise.all([
             fetch("/api/taskData").then((response) => response.json()),
-            fetch("/api/user").then((response) => response.json()),
+            fetch("/api/userData").then((response) => response.json()),
             fetch("/api/projectData").then((response) => response.json())
           ]).then(([taskData, userData, projectData]) => {
             setTasks(taskData);
             setUsers(userData);
             setProjects(projectData);
-            let tableData = userData.map((user: any) => {
+            
+            const projectId = projectsId; //FOR CHARLOTTE Replace the string with the variable that has the project id in it
+            const filteredUsers = userData.filter((user:any) =>
+                taskData.some((task:any) => task.projectsId === projectId && task.members[0].id === user.id)
+            );
 
-              let userMetrics = getEmpTaskStats(user.id);
-              return {
-                ...user,
-                current: userMetrics.current,
-                overdue: userMetrics.overdue,
-                rating: userMetrics.rating
-              };
-            });
-            setProducts(tableData);
+            setProducts(filteredUsers);
+            // setProducts(userData);
 
             function getEmpTaskStats(id:any){
                 let todo=0;
@@ -146,7 +143,7 @@ export default function EmpTblSingle(){
     return (
         <>
             <div className="card">
-            <DataTable value={products} tableStyle={{ minWidth: '50rem' }} selectionMode="single" selection={selectedProduct}
+            <DataTable value={products} tableStyle={{ minWidth: '20rem' }} selectionMode="single" selection={selectedProduct}
         onSelectionChange={(e) => empSelect(e.value)} dataKey="id">
                 {columns.map((col, i) => (
                     <Column key={col.field} field={col.field} header={col.header} sortable />

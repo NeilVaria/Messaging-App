@@ -1,88 +1,87 @@
-import React from 'react';
-import { Doughnut } from 'react-chartjs-2';
-import { Chart, ArcElement, Title, Legend } from 'chart.js';
-import { Card, Text } from '@tremor/react';
 import { useEffect, useState } from 'react';
-Chart.register(ArcElement, Legend, Title);
+import { Card, Title} from "@tremor/react";
+import { Doughnut } from 'react-chartjs-2';
+import { Chart, ArcElement, Legend } from 'chart.js';
+Chart.register(ArcElement, Legend);
 
 interface Task {
   id: string;
   name: string;
-  username: string;
-  hours: string;
-  members: string[];
-  project: string;
+  description: string;
+  hours: number;
   dueDate: string;
   completed: boolean;
-  completionDate: string;
-  manhours: string;
+  completionDate: string | null;
+  manhours: number;
   projectsId: string;
 }
 
-interface DonutChartData {
-  complete: number;
-  incomplete: number;
-  overdue: number;
+interface Project {
+  id: string;
+  name: string;
+  description: string;
+  completionDate: string | null;
+  deadline: string;
+  completed: boolean;
+  members: {
+    id: string;
+    name: string;
+    username: string;
+    role: string;
+    email: string;
+    image: string | null;
+    password: string;
+  }[];
 }
 
+interface DonutChartProps {
+  project: Project;
+  tasks: Task[];
+}
 
-const DonutChart = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [chartData, setChartData] = useState<DonutChartData>({
-    complete: 0,
-    incomplete: 0,
-    overdue: 0,
-  });
-  
-
-  useEffect(() => {
-    fetch('/api/taskData')
-      .then((response) => response.json())
-      .then((data) => setTasks(data));
-  }, []);
+const DonutChart: React.FC<DonutChartProps> = ({ project, tasks }) => {
+  const [completedTasks, setCompletedTasks] = useState<Task[]>([]);
+  const [incompleteTasks, setIncompleteTasks] = useState<Task[]>([]);
+  const [overdueTasks, setOverdueTasks] = useState<Task[]>([]);
 
   useEffect(() => {
-    const completeCount = tasks.filter((task) => task.completed).length;
-    const incompleteCount = tasks.filter((task) => !task.completed && new Date(task.dueDate) >= new Date()).length;
-    const overdueCount = tasks.filter((task) => !task.completed && new Date(task.dueDate) < new Date()).length;
+    const filteredTasks = tasks.filter(task => task.projectsId === project.id);
 
-    setChartData({
-      complete: completeCount,
-      incomplete: incompleteCount,
-      overdue: overdueCount,
-    });
-  }, [tasks]);
+    const completed = filteredTasks.filter(task => task.completed);
+    const incomplete = filteredTasks.filter(task => !task.completed && new Date(task.dueDate) >= new Date());
+    const overdue = filteredTasks.filter(task => !task.completed && new Date(task.dueDate) < new Date());
 
-  const { complete, incomplete, overdue } = chartData;
+    setCompletedTasks(completed);
+    setIncompleteTasks(incomplete);
+    setOverdueTasks(overdue);
+  }, [project, tasks]);
 
-  //text in the middle of the chart
   const textCenter = {
     id: 'textCenter',
     beforeDatasetsDraw(chart: any, args: any, pluginOptions: any) {
       const { ctx, data } = chart;
-
       ctx.save();
       ctx.font = 'bolder 15px sans-serif';
-      ctx.fillStyle = 'red';
+      ctx.fillStyle = 'black';
       ctx.textAlign = 'center';
       //sum of all tasks
       const sum = data.datasets[0].data[0] + data.datasets[0].data[1] + data.datasets[0].data[2];
-      ctx.fillText(`Value: ${sum}`, chart.getDatasetMeta(0).data[0].x, chart.getDatasetMeta(0).data[0].y);
+      ctx.fillText(`Tasks:${sum}`, chart.getDatasetMeta(0).data[0].x, chart.getDatasetMeta(0).data[0].y);
     },
   };
 
   return (
     <div>
-      <Card className="mb-4 drop-shadow-md">
-        <Text className="text-gray-800">Task Completion Status</Text>
+      <Card>
+        <Title>Task Completion Status</Title>
         <Doughnut
           data={{
-            labels: ['Complete', 'Incomplete', 'Overdue'],
+            labels:['Complete', 'Incomplete', 'Overdue'],
             datasets: [
               {
                 label: 'Task Completion Status',
                 backgroundColor: ['#4CAF50', '#F44336', '#FFC107'],
-                data: [complete, incomplete, overdue],
+                data: [completedTasks.length, incompleteTasks.length, overdueTasks.length]
               },
             ],
           }}
@@ -95,9 +94,12 @@ const DonutChart = () => {
             },
           }}
           plugins={[textCenter]}
-          height={100}
-          width={200}
-        ></Doughnut>
+          ></Doughnut>
+        <div className="mt-3">
+          <div>Completed Tasks: {completedTasks.length}</div>
+          <div>Incomplete Tasks: {incompleteTasks.length}</div>
+          <div>Overdue Tasks: {overdueTasks.length}</div>
+        </div>
       </Card>
     </div>
   );
