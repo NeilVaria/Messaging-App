@@ -7,6 +7,7 @@ import DonutChart from '@/components/totalTasks';
 import EmpTblSingle from '@/components/EmpTblSingle';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
+import MyDemo from "@/components/manHrsChart";
 import Head from 'next/head';
 
 interface Task {
@@ -156,6 +157,11 @@ const ProjectPage: React.FC = () => {
                 </div>
               )}
             </Card>
+            <div className="col-span-2">
+                <Card className="h-4/5 overflow-auto">
+                  <MyDemo projectsId={projectid as string}/>
+                </Card>
+              </div>
           </div>
           <div className="w-1/3">
             <Card className='shadow h-max-content overflow-y-auto overflow-x-hidden'>

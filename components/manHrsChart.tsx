@@ -46,7 +46,7 @@ type Project ={
     name: string;
 }
 
-export default function MyDemo(){
+export default function MyDemo({ projectsId }: { projectsId: string }){
     const [tasks, setTasks] = useState<Task[]>([]);
     const [users, setUsers] = useState<User[]>([]);
     const [projects, setProjects] = useState<Project[]>([]);
@@ -59,18 +59,18 @@ export default function MyDemo(){
     }]);
     const [checked, setChecked] = useState(false);
 
-    function toggle(check : any){
-        setChecked(check);
-        if (checked){
-            setSelectData([
-                {id:"all", name:"All"},
-                ...projects]);
-        } else {
-            setSelectData([
-                {id:"all", name:"All"},
-                ...users]);
-        }
-    }
+    // function toggle(check : any){
+    //     setChecked(check);
+    //     if (checked){
+    //         setSelectData([
+    //             {id:"all", name:"All"},
+    //             ...projects]);
+    //     } else {
+    //         setSelectData([
+    //             {id:"all", name:"All"},
+    //             ...users]);
+    //     }
+    // }
 
 
     const [chartData, setChartData] = useState({});
@@ -137,9 +137,23 @@ export default function MyDemo(){
             setTasks(taskData);
             setUsers(userData);
             setProjects(projectData);
-            setSelectData([
-                {id:"all", name:"All"},
-                ...projectData]);
+            if(projectsId=="all"){
+                setSelectData([
+                    {id:"all", name:"All"}]);
+            }else{
+                const filteredUsers = userData.filter((user:any) => taskData.some((task:any) => task.projectsId === projectsId && task.members[0].id === user.id));
+                for (let p =0; p<projectData.length; p++){
+                    if(projectData[p].id==projectsId){
+                        setSelectData([projectData[p], ...filteredUsers]);
+                        break;
+                    }
+                }
+            }
+
+
+            // setSelectData([
+            //     {id:"all", name:"All"},
+            //     ...projectData]);
           });
         const select = document.getElementById("chartSelect");
         const documentStyle = getComputedStyle(document.documentElement);
@@ -184,7 +198,7 @@ export default function MyDemo(){
     return (
         <>
              <div className="card flex justify-content-center">
-                 <ToggleButton id="toggle" checked={checked} onLabel="Users" offLabel="Projects "onChange={(e) => toggle(e.value)}/>
+                 {/* <ToggleButton id="toggle" checked={checked} onLabel="Users" offLabel="Projects "onChange={(e) => toggle(e.value)}/> */}
             <Dropdown id="chartSelect" value={selectedCity} onChange={(e) => cityChange(e.value, tasks)} options={selectData} optionLabel="name" filter showClear filterBy="name"
                 placeholder="Select" className="w-full md:w-14rem" />
             </div>

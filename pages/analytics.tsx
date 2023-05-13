@@ -109,7 +109,7 @@ export default function ProjectsPage() {
         </div>
         <div className="col-span-2">
           <Card className="h-4/5 overflow-auto">
-            <MyDemo />
+            <MyDemo projectsId={"all"} />
           </Card>
         </div>
       </div>
