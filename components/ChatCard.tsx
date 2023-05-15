@@ -98,7 +98,8 @@ const ChatCard: React.FC<ChatCardProps> = ({
             <div className="flex justify-between w-full">
               <div className="flex flex-col justify-between w-full">
                 <div className="flex flex-row justify-between w-full">
-                  <div className="flex items-center justify-center line-clamp-1">{name}</div>
+                <div className="flex items-center justify-center line-clamp-2 overflow-ellipsis w-full break-words">{name}</div>
+
                   <div className="text-gray-600 text-xs flex items-center justify-center">{timeAgo(lastMessageTimestamp)}</div>
                 </div>
                 <div className="text-gray-600 text-sm flex items-center">{username}</div>

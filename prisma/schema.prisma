@@ -10,37 +10,36 @@ datasource db {
 }
 
 model User {
-  id       String        @id @default(cuid())
-  name     String
-  username String        @unique
-  role     String
-  email    String        @unique
-  image    String?
-  password String
-  Message  Message[]
-  RoomMember RoomMember[]
+  id          String        @id @default(cuid())
+  name        String
+  username    String        @unique
+  role        String
+  email       String        @unique
+  image       String?
+  password    String
+  Message     Message[]
+  RoomMember  RoomMember[]
   MessageSeen MessageSeen[]
-  tasks Tasks[]
-
+  tasks       Tasks[]
 }
 
 model Message {
-  id        Int          @id @default(autoincrement())
+  id        Int           @id @default(autoincrement())
   content   String
-  createdAt DateTime     @default(now())
+  createdAt DateTime      @default(now())
   authorId  String
-  author    User         @relation(fields: [authorId], references: [id])
+  author    User          @relation(fields: [authorId], references: [id])
   roomId    String
-  room      Room         @relation(fields: [roomId], references: [id])
+  room      Room          @relation(fields: [roomId], references: [id])
   seenBy    MessageSeen[]
 }
 
 model Room {
-  id       String       @id @default(cuid())
-  name     String?
-  image    String?
-  messages Message[]
-  members  RoomMember[]
+  id          String        @id @default(cuid())
+  name        String?
+  image       String?
+  messages    Message[]
+  members     RoomMember[]
   MessageSeen MessageSeen[]
 }
 
@@ -55,11 +54,12 @@ model RoomMember {
 
 model MessageSeen {
   messageId Int
-  message   Message @relation(fields: [messageId], references: [id])
+  message   Message  @relation(fields: [messageId], references: [id])
   userId    String
-  user      User    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   roomId    String
-  room      Room    @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
+  updatedAt DateTime @default(now())
   seen      Boolean
 
   @@id([messageId, userId, roomId])
@@ -76,17 +76,15 @@ model Projects {
 }
 
 model Tasks {
-  id          String    @id @unique @default(cuid())
-  name        String
-  description String
-  hours       Int
-  members     User[]
-  project     Projects? @relation(fields: [projectsId], references: [id])
-  dueDate     DateTime
-  completed   Boolean   @default(false)
+  id             String    @id @unique @default(cuid())
+  name           String
+  description    String
+  hours          Int
+  members        User[]
+  project        Projects? @relation(fields: [projectsId], references: [id])
+  dueDate        DateTime
+  completed      Boolean   @default(false)
   completionDate DateTime?
-  manhours    Int
-  projectsId  String?
+  manhours       Int
+  projectsId     String?
 }
-
-

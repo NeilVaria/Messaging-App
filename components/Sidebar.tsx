@@ -123,11 +123,11 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
       <ThemeProvider>
         <div
           ref={sidebarListContainerRef}
-          className={`${selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"} fixed left-0 border-r border-gray-300 flex flex-col`}
+          className={`${selectedChatData ? "hidden sm:flex md:flex" : "w-full sm:w-[325px] md:w-[375px]"} fixed left-0 border-r border-gray-300 flex flex-col `}
           style={{ height: sidebarListHeight }}
         >
           <div className="w-full">
-            <div className="p-2 my-3 h-12 flex items-center justify-center fixed left-0 w-full sm:w-1/5 md:w-2/12 ">
+            <div className="p-2 my-3 h-12 border-r border-gray-300 flex items-center justify-center fixed left-0 w-full sm:w-[325px] md:w-[375px] ">
               <Input
                 type="text"
                 icon={<FontAwesomeIcon icon={faSearch} className="text-gray-400" />}
@@ -141,13 +141,13 @@ const Sidebar: React.FC<SidebarProps> = ({ chatsData, selectedChatData, onChatSe
           <div
             ref={chatListContainerRef}
             className={`${
-              selectedChatData ? "hidden sm:block md:block" : "w-full sm:w-1/5 md:w-2/12"
-            } flex-grow border-gray-300 bottom-16 md:border-none md:z-0 -z-10 border flex flex-col fixed overflow-y-auto w-1/5 md:w-2/12`}
+              selectedChatData ? "hidden sm:flex md:flex " : "w-full"
+            } flex-grow border-gray-300 bottom-16 md:border-r md:z-0 -z-10 border flex flex-col fixed overflow-y-auto sm:w-[325px] md:w-[375px]`}
             style={{ height: chatListHeight }}
           >
             <ChatList chatsData={filteredChats} selectedChatData={selectedChatData} onChatSelect={onChatSelect} />
           </div>
-          <div className=" sm:w-1/5 md:w-2/12 h-16 border border-gray-300 py-3 px-4 flex w-full items-center fixed bottom-0 left-0">
+          <div className=" sm:w-[325px] md:w-[375px] h-16 border border-gray-300 py-3 px-4 flex w-full items-center fixed bottom-0 left-0">
             <img
               src={session?.user.image || "default-avatar.svg"} // Replace with the actual profile image URL
               alt="Profile"

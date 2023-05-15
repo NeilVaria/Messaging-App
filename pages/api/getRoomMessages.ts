@@ -11,10 +11,22 @@ const getRoomMessages = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const messages = await prisma.message.findMany({
       where: { roomId },
-      include: { author: true },
+      include: { 
+        author: true,
+        seenBy: {
+          include: {
+            user: true
+          }
+        } 
+      },
     });
 
-    res.status(200).json(messages);
+    const messagesWithSeenData = messages.map((message) => ({
+      ...message,
+      seen: message.seenBy.map(({ user, seen }) => [user.id, message.id, seen])
+    }));
+
+    res.status(200).json(messagesWithSeenData);
   } catch (error) {
     res.status(500).json({ message: "Error fetching room messages", error });
   }
