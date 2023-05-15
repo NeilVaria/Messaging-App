@@ -4,6 +4,7 @@ import type { Socket as NetSocket } from "net";
 import { Server, Socket as IOSocket } from "socket.io";
 
 import prisma from "../../lib/prismadb";
+import { Message, MessageSeen, User } from "@prisma/client";
 
 interface SocketServer extends HTTPServer {
   io?: Server | undefined;
@@ -32,47 +33,39 @@ io.on("connection", (socket: IOSocket) => {
     console.log(`User ${username} joined room ${roomId}`);
   });
 
-  socket.on("chat message", async ({ roomId, username, message, timestamp }) => {
-    console.log(`[${username}]: ${message}`);
-    socket.to(roomId).emit("chat message", { username, message, timestamp });
-
-    // Find the user who sent the message
-    const author = await prisma.user.findUnique({ where: { username } });
-
-    if (author) {
-      // Store the message in the database
-      const newMessage = await prisma.message.create({
-        data: {
-          content: message,
-          createdAt: new Date(timestamp),
-          authorId: author.id,
-          roomId,
-        },
-      });
-
-      // Get all room members excluding the author
-      const roomMembers = await prisma.roomMember.findMany({
-        where: {
-          roomId,
-          userId: {
-            not: author.id,
-          },
-        },
-      });
-
-      // Update MessageSeen for all users apart from the author
-      for (const member of roomMembers) {
-        await prisma.messageSeen.create({
-          data: {
-            messageId: newMessage.id,
-            userId: member.userId,
-            roomId,
-            seen: false,
-          },
-        });
-      }
-    }
+  socket.on("chat message", async (message: Message & {author:User, seenBy: (MessageSeen & {user: User;})[]}) => {
+    console.log(`[${message.author.username}]: ${message.content}`);
+    socket.to(message.roomId).emit("chat message", message);
   });
+
+  socket.on("message seen", async ({roomID, messageId, userId }) => {
+    console.log(`User ${userId} has seen message ${messageId}`);
+    
+    // Update the seen status in the database
+    await prisma.messageSeen.updateMany({
+      where: {
+        messageId: messageId,
+        userId: userId,
+      },
+      data: {
+        seen: true,
+      },
+    });
+  
+    // Fetch the updated MessageSeen information
+    const updatedMessageSeen = await prisma.messageSeen.findFirst({
+      where: {
+        messageId: messageId,
+        userId: userId,
+      },
+      include: {
+        user: true, // Include the related User information
+      },
+    });
+  
+    // Emit the updated MessageSeen information
+    socket.in(roomID).emit("message seen", updatedMessageSeen);
+  });  
 
   socket.on("disconnect", () => {
     const user = activeUsers.get(socket.id);
