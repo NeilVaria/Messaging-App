@@ -9,6 +9,55 @@ interface UserWithPassword extends Prisma.UserCreateInput {
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  /**
+ * @swagger
+ * /auth/signup:
+ *   post:
+ *     tags:
+ *       - Authentication
+ *     description: Register a new user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - name
+ *               - role
+ *               - username
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               name:
+ *                 type: string
+ *               role:
+ *                 type: string
+ *               username:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Successfully created user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: Form data not found
+ *       409:
+ *         description: Email address or Username already in use
+ *       500:
+ *         description: HTTP method not valid, only POST accepted
+ */
+
+  
   if (req.method === "POST") {
     if (!req.body) return res.status(404).json({ error: "Don't have form data!" });
 

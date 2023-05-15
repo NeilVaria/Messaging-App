@@ -1,6 +1,66 @@
 // pages/api/tasksOnProject.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../lib/prismadb";
+import { getSession } from "next-auth/react";
+
+/**
+ * @swagger
+ * /api/tasksOnProject:
+ *   get:
+ *     tags:
+ *       - Tasks
+ *     description: Retrieves tasks associated with a specific project or all tasks if no project ID is provided
+ *     parameters:
+ *       - in: query
+ *         name: projectID
+ *         schema:
+ *           type: string
+ *         description: The ID of the project to filter tasks by
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved task data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 tasks:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       name:
+ *                         type: string
+ *                       description:
+ *                         type: string
+ *                       hours:
+ *                         type: integer
+ *                       projectsId:
+ *                         type: string
+ *                         nullable: true
+ *                       dueDate:
+ *                         type: string
+ *                       completed:
+ *                         type: boolean
+ *                       completionDate:
+ *                         type: string
+ *                         nullable: true
+ *                       manhours:
+ *                         type: integer
+ *                       project:
+ *                         type: object
+ *                       members:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Error retrieving task data
+ */
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {

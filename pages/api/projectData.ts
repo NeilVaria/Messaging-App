@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User, Tasks } from "@prisma/client";
 
 import prisma from "../../lib/prismadb";
+import { getSession } from "next-auth/react";
 
 export interface ProjectData {
   id: string;
@@ -21,7 +22,66 @@ interface TasksWithMembers extends Tasks {
   members: User[];
 }
 
+/**
+ * @swagger
+ * /api/projectData:
+ *   get:
+ *     tags:
+ *       - Projects
+ *     description: Retrieves detailed project data including member count, progress, and status
+ *     responses:
+ *       200:
+ *         description: Returns a list of project data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/ProjectData'
+ *       401:
+ *         description: Unauthorized
+ *       500:
+ *         description: Error retrieving project data
+ *       405:
+ *         description: Method not allowed
+ * components:
+ *   schemas:
+ *     ProjectData:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         name:
+ *           type: string
+ *         description:
+ *           type: string
+ *         taskCount:
+ *           type: integer
+ *         deadline:
+ *           type: string
+ *           format: date
+ *         completionDate:
+ *           type: string
+ *           format: date
+ *         completed:
+ *           type: boolean
+ *         memberCount:
+ *           type: integer
+ *         progress:
+ *           type: integer
+ *         overdue:
+ *           type: string
+ *         status:
+ *           type: string
+ */
+
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== "GET") {
+    res.status(405).json({ error: "Method not allowed" });
+    return;
+  }
+
   try {
     const projects = await prisma.projects.findMany({
       include: {

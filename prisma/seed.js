@@ -207,6 +207,34 @@ async function main() {
     },
   });
 
+  const user14 = await prisma.User.upsert({
+    where: {
+      username: "skywalker",
+    },
+    update: {},
+    create: {
+      name: "Anikan Skywalker",
+      username: "TheChosenOne",
+      role: "user",
+      email: "anikan@testing.com",
+      password: hash,
+    },
+  });
+
+  const user15 = await prisma.User.upsert({
+    where: {
+      username: "kenobi",
+    },
+    update: {},
+    create: {
+      name: "Obi Wan Kenobi",
+      username: "TheWiseOne",
+      role: "user",
+      email: "obiwan@testing.com",
+      password: hash,
+    },
+  });
+
   //Create projects
 
   const project1 = await prisma.Projects.upsert({

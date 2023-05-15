@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient, User } from "@prisma/client";
 
 import prisma from "../../lib/prismadb";
+import { getSession } from "next-auth/react";
+
 
 const sortByTimestampWithNullFirst = (a: any, b: any) => {
   if (a.lastMessageTimestamp === "null" && b.lastMessageTimestamp === "null") {
@@ -86,6 +88,86 @@ const getChatsData = async (userId: string, activeUsers: any[]) => {
 
   return sortedChatsData;
 };
+
+/**
+ * @swagger
+ * /api/getChatsData:
+ *   post:
+ *     tags:
+ *       - Chat Rooms
+ *     description: Fetches data about all chatrooms a user is in
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         description: The ID of the user to requesting chat data
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: List of active users
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               type: string
+ *     responses:
+ *       200:
+ *         description: Returns a list of chat data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Chat'
+ *       400:
+ *         description: User ID is required
+ *       401:
+ *         description: Unauthorized, user is not logged in
+ *       500:
+ *         description: Server error
+ *       405:
+ *         description: Method not allowed
+ * components:
+ *   schemas:
+ *     Chat:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *           description: The id of the chat room
+ *         imageUrl:
+ *           type: string
+ *           description: The URL of the chat room's image
+ *         name:
+ *           type: string
+ *           description: The name of the chat room
+ *         username:
+ *           type: string
+ *           description: The usernames of the members in the chat room
+ *         isOnline:
+ *           type: boolean
+ *           description: The online status of the chat room (only for direct messages)
+ *         lastMessage:
+ *           type: string
+ *           description: The last message in the chat room
+ *         lastMessageTimestamp:
+ *           type: string
+ *           format: date-time
+ *           description: The timestamp of the last message in the chat room
+ *         hasNotification:
+ *           type: boolean
+ *           description: Whether the chat room has a notification
+ *         users:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: The users in the chat room
+ *         isGroup:
+ *           type: boolean
+ *           description: Whether the chat room is a group chat
+ */
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "POST") {
