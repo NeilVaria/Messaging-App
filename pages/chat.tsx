@@ -64,7 +64,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
     const updateSeenStatus = async (roomId: String, userId: String | undefined) => {
       if (!socket?.connected) return;
       try {
-        const response = await fetch("/api/setSeen", {
+        const response = await fetch("/api/seenStatus", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -190,7 +190,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
 
   const fetchRoomMessages = async (roomId: string) => {
     try {
-      const response = await fetch("/api/getRoomMessages", {
+      const response = await fetch("/api/roomMessages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -283,7 +283,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
   };
   const fetchChatsData = async () => {
     try {
-      const response = await fetch(`/api/getChatsData?userId=${session?.user.id}`, {
+      const response = await fetch(`/api/chatsData?userId=${session?.user.id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

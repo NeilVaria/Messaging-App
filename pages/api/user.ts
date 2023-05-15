@@ -2,8 +2,47 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 
 import prisma from "../../lib/prismadb";
+import { getSession } from "next-auth/react";
+
+/**
+ * @swagger
+ * /api/user:
+ *   get:
+ *     tags:
+ *       - Users
+ *     description: Retrieves a list of all users excluding the current user
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the current user
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved users data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                   username:
+ *                     type: string
+ *       401:
+ *         description: Unauthorized
+ *       405:
+ *         description: Method not allowed
+ *       500:
+ *         description: Error fetching users
+ */
+
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  
   const { method, query } = req;
 
   switch (method) {

@@ -1,10 +1,18 @@
-import { Button, ThemeProvider } from "@material-tailwind/react";
+import {
+  Card,
+  CardBody,
+  Typography,
+  ThemeProvider,
+  Button
+} from "@material-tailwind/react";
 import { getSession, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
-import router from "next/router";
+import { useRouter } from "next/router";
 
 export default function Home() {
   const { data: session, status } = useSession();
+  const router = useRouter();
+
   if (status === "loading") {
     return <p>Loading...</p>;
   }
@@ -17,34 +25,45 @@ export default function Home() {
           <Head>
             <title>Home Page</title>
           </Head>
-          <div className="flex w-screen h-screen justify-center items-center">
-            <div className="w-1/3 h-full flex justify-center items-center">
-              <Button
-                className="transition-all w-2/5 h-12 bg-gradient-to-tr from-yellow-700 to-amber-900 rounded-md hover:shadow-lg hover:bg-amber-300 text-white font-bold py-2 px-4 border-2 border-yellow-700 shadow-yellow-500/20 hover:shadow-yellow-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                data-ripple-light="true"
-                onClick={() => router.push("/chat")}
-              >
-                Chatroom
-              </Button>
+          <div className="flex flex-col w-screen h-screen justify-center items-center p-8">
+            <div className="grid grid-cols-3 gap-4 w-full mb-8">
+              <Card onClick={() => router.push("/chat")} className="cursor-pointer">
+                <CardBody>
+                  <Typography variant="h5" color="blue-gray" className="mb-2">
+                    Chatroom
+                  </Typography>
+                  <Typography>
+                    Text Chat Subsystem - Create and join chatrooms with other users.
+                  </Typography>
+                </CardBody>
+              </Card>
+              <Card onClick={() => router.push("/analytics")} className="cursor-pointer">
+                <CardBody>
+                  <Typography variant="h5" color="blue-gray" className="mb-2">
+                    Data Analytics
+                  </Typography>
+                  <Typography>
+                    Data Analytics Subsystem - View and analyze data on projects and tasks.
+                  </Typography>
+                </CardBody>
+              </Card>
+              <Card onClick={() => router.push("/api-documentation")} className="cursor-pointer">
+                <CardBody>
+                  <Typography variant="h5" color="blue-gray" className="mb-2">
+                    API Documentation
+                  </Typography>
+                  <Typography>
+                    API Documentation - View the documentation for the RESTful API.
+                  </Typography>
+                </CardBody>
+              </Card>
             </div>
-            <div className="w-1/3 h-full flex justify-center items-center">
-              <Button
-                className="transition-all w-2/5 h-12 bg-gradient-to-bl from-yellow-700 to-amber-900 rounded-md hover:shadow-lg hover:bg-amber-300 text-white font-bold py-2 px-4 border-2 border-yellow-700 shadow-yellow-500/20 hover:shadow-yellow-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                data-ripple-light="true"
-                onClick={() => router.push("/analytics")}
-              >
-                Analytics
-              </Button>
-            </div>
-            <div className="w-1/3 h-full flex justify-center items-center">
-              <Button
-                className="transition-all w-2/5 h-12 bg-gradient-to-br from-yellow-700 to-amber-900 rounded-md hover:shadow-lg hover:bg-amber-300 text-white font-bold py-2 px-4 border-2 border-yellow-700 shadow-yellow-500/20 hover:shadow-yellow-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                data-ripple-light="true"
-                onClick={() => signOut()}
-              >
-                Sign Out
-              </Button>
-            </div>
+            <button
+              onClick={() => signOut()}
+              className="p-2 text-white bg-red-500 rounded"
+            >
+              Sign Out
+            </button>
           </div>
         </ThemeProvider>
       </>

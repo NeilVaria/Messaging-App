@@ -81,6 +81,8 @@ export default function EmpTblSingle({ projectsId }: { projectsId: string }){
             setTasks(taskData);
             setUsers(userData);
             setProjects(projectData);
+
+            console.log("Task Data", taskData)
             
             const projectId = projectsId; //FOR CHARLOTTE Replace the string with the variable that has the project id in it
             const filteredUsers = userData.filter((user:any) =>
