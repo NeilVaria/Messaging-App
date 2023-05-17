@@ -5,9 +5,8 @@ import TopBar from "../components/TopBar";
 import CreateRoomModal from "@/components/CreateRoomModal";
 import { useSession } from "next-auth/react";
 import router from "next/router";
-import { BsCheckAll, BsCheck } from 'react-icons/bs';
+import { BsCheckAll, BsCheck } from "react-icons/bs";
 import { Message, MessageSeen, User } from "@prisma/client";
-
 
 type SelectUser = {
   id: string;
@@ -29,8 +28,6 @@ interface ChatData {
   users: string[];
 }
 
-
-
 const Chat = ({ socket, setSocket }: ChatProps) => {
   const [selectedChatData, setSelectedChatData] = useState<ChatData | null>(null);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
@@ -39,9 +36,14 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
   const username = session?.user.username;
 
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<  (Message & {author:User, seenBy: (MessageSeen & {
-    user: User;
-})[]})[]>([]);
+  const [messages, setMessages] = useState<
+    (Message & {
+      author: User;
+      seenBy: (MessageSeen & {
+        user: User;
+      })[];
+    })[]
+  >([]);
 
   const [activeUsers, setActiveUsers] = useState<string[]>([]);
   const [chatsData, setChatsData] = useState<any[]>([]);
@@ -71,16 +73,14 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
           },
           body: JSON.stringify({ roomId, userId }),
         });
-  
+
         const data = await response.json();
         const updatedMessageIds = data.updatedMessageIds;
 
         // loop through the updatedMessageIds and emit the message seen event
         updatedMessageIds.forEach((messageId: number) => {
-          socket?.emit("message seen", {roomID: selectedChatId , messageId: messageId, userId: session?.user.id });
+          socket?.emit("message seen", { roomID: selectedChatId, messageId: messageId, userId: session?.user.id });
         });
-        
-        
       } catch (error) {
         console.error("Error updating seen status:", error);
       }
@@ -105,7 +105,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
-  
+
     if (socket && selectedChatId) {
       const timestamp = new Date().toISOString();
       const tempMessage = {
@@ -117,19 +117,19 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
         author: session!.user as User,
         seenBy: [],
       };
-      
+
       setMessages((prevMessages) => [...prevMessages, tempMessage]);
-  
+
       // Call the API to store the message in the database
-      const response = await fetch('/api/messages', {
-        method: 'POST',
+      const response = await fetch("/api/messages", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ roomId: selectedChatId, username, message, timestamp })
+        body: JSON.stringify({ roomId: selectedChatId, username, message, timestamp }),
       });
       const data = await response.json();
-  
+
       // Update the local state with the actual message ID
       setMessages((prevMessages) => {
         return prevMessages.map((m) => {
@@ -143,12 +143,10 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
         });
       });
     }
-  
+
     // Clear the form fields after submitting
     setMessage("");
   };
-  
-  
 
   useEffect(() => {
     if (selectedChatData) {
@@ -197,9 +195,12 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
         },
         body: JSON.stringify({ roomId }),
       });
-      const messages: (Message & {author:User, seenBy: (MessageSeen & {
-        user: User;
-    })[]})[] = await response.json();
+      const messages: (Message & {
+        author: User;
+        seenBy: (MessageSeen & {
+          user: User;
+        })[];
+      })[] = await response.json();
       setMessages(messages);
     } catch (error) {
       console.error("Error fetching room messages:", error);
@@ -244,17 +245,16 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
         console.log("connected");
       });
 
-      newSocket.on("chat message", (data: Message & {author:User, seenBy: (MessageSeen & {user: User;})[]}) => {
-        newSocket.emit('message seen', {roomID: selectedChatId , messageId: data.id, userId: session?.user.id });
+      newSocket.on("chat message", (data: Message & { author: User; seenBy: (MessageSeen & { user: User })[] }) => {
+        newSocket.emit("message seen", { roomID: selectedChatId, messageId: data.id, userId: session?.user.id });
         setMessages((prevMessages) => [...prevMessages, data]);
       });
-      
 
       newSocket.on("active users", (users: string[]) => {
         setActiveUsers(users);
       });
 
-      newSocket.on("message seen", (data: MessageSeen & {user: User}) => {
+      newSocket.on("message seen", (data: MessageSeen & { user: User }) => {
         // Update the message in messages where message id = data.messageId
         setMessages((prevMessages) => {
           return prevMessages.map((m) => {
@@ -264,10 +264,8 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
             }
             return m;
           });
-        }
-        );
+        });
       });
-      
 
       return () => {
         // disconnect socket and abort fetch when component unmounts
@@ -279,8 +277,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleCreateRoom = (selectedUsers: SelectUser[]) => {
-  };
+  const handleCreateRoom = (selectedUsers: SelectUser[]) => {};
   const fetchChatsData = async () => {
     try {
       const response = await fetch(`/api/chatsData?userId=${session?.user.id}`, {
@@ -381,12 +378,11 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
                 ref={messageListContainerRef}
                 className="flex flex-col sm:w-[calc(100vw-325px)] md:w-[calc(100vw-375px)] md:border-none border-b border-gray-500 overflow-y-auto md:z-0 -z-10 h-[calc(100vh-8.75rem)] md:h-[calc(100vh-9.5rem)]"
               >
-                {(messages.map((msg, index) => {
+                {messages.map((msg, index) => {
                   const isCurrentUser = msg.authorId === session?.user.id;
                   const delivered = msg.id !== -1;
 
                   const seen = msg.seenBy.some((seenBy) => seenBy.userId);
-
 
                   return (
                     <div
@@ -399,31 +395,39 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
                         </div>
                         <div className="w-full">
                           <div className={`flex items-center ${isCurrentUser ? `justify-end` : `justify-start`}`}>
-                          <div className="flex">
-                            <div className="text-xs md:text-base">{isCurrentUser ? "You" : msg.author.username}</div>
+                            <div className="flex">
+                              <div className="text-xs md:text-base">{isCurrentUser ? "You" : msg.author.username}</div>
+                            </div>
                           </div>
-                          </div>
-                          <div className={`flex items-center ${isCurrentUser ? `justify-end`: `justify-start`}`}>
+                          <div className={`flex items-center ${isCurrentUser ? `justify-end` : `justify-start`}`}>
                             <div className={`${isCurrentUser ? "bg-blue-500 text-white" : " bg-blue-gray-100"} rounded-lg p-3 `}>
                               <div className="flex justify-between items-end md:text-base text-sm h-full">
                                 <div>{msg.content}</div>
                               </div>
                             </div>
                           </div>
-                          <span className={`md:text-xs flex items-center text-[0.7rem] italic text-gray-600 ${isCurrentUser ? `justify-end`: `justify-start`}`}>
+                          <span
+                            className={`md:text-xs flex items-center text-[0.7rem] italic text-gray-600 ${isCurrentUser ? `justify-end` : `justify-start`}`}
+                          >
                             {timeAgo(msg.createdAt.toString())}
-                            <div className={`flex flex-col h-full justify-center items-end pl-2 text-xl ${seen ? " text-blue-500" : " text-gray-500"} `}>{isCurrentUser ? (delivered ? <BsCheckAll/> : <BsCheck />) : null}</div>
+                            <div className={`flex flex-col h-full justify-center items-end pl-2 text-xl ${seen ? " text-blue-500" : " text-gray-500"} `}>
+                              {isCurrentUser ? delivered ? <BsCheckAll /> : <BsCheck /> : null}
+                            </div>
                           </span>
                         </div>
                       </div>
                       <div ref={chatEndRef} />
                     </div>
                   );
-                }))}
+                })}
               </div>
             )}
             {selectedChatData !== null && (
-              <div className={`${selectedChatData ? "w-full sm:w-[calc(100vw-325px)] md:w-[calc(100vw-375px)]" : "hidden sm:block md:block"} fixed bottom-0 right-0 flex h-16 px-1 md:px-3`}>
+              <div
+                className={`${
+                  selectedChatData ? "w-full sm:w-[calc(100vw-325px)] md:w-[calc(100vw-375px)]" : "hidden sm:block md:block"
+                } fixed bottom-0 right-0 flex h-16 px-1 md:px-3`}
+              >
                 <form className=" flex flex-row mb-2 w-full" id="form" onSubmit={onSubmit}>
                   <input
                     className="rounded-sm border border-gray-400 px-1 basis-11/12"
@@ -432,6 +436,7 @@ const Chat = ({ socket, setSocket }: ChatProps) => {
                     value={message}
                     onChange={(event) => setMessage(event.target.value)}
                     placeholder="Your message..."
+                    maxLength={255}
                   />
                   <button
                     disabled={message.length === 0}

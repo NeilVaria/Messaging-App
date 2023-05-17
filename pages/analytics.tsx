@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import ProjectsCard from "@/components/ProjectCard";
 import ProjectList from "@/components/ProjectList";
 import { ProjectData } from "./api/projectData";
-import EmpTbl from '@/components/EmployeeTbl';
-import EmpTblSingle from '@/components/EmployeeTbl';
+import EmpTbl from "@/components/EmployeeTbl";
+import EmpTblSingle from "@/components/EmployeeTbl";
 import MyDemo from "@/components/manHrsChart";
 import { Card, Dropdown, DropdownItem, Text, Title } from "@tremor/react";
 import Head from "next/head";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import router from "next/router";
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<ProjectData[]>([]);
@@ -64,57 +67,51 @@ export default function ProjectsPage() {
     setProgressSortOrder(e.target.value as typeof progressSortOrder);
   }
 
-
   return (
     <>
-    <Head>
-      <title>Analytics</title>
-    </Head>
+      <Head>
+        <title>Analytics</title>
+      </Head>
       <div className="container mx-auto px-4 py-6">
-      <h1 className="text-3xl font-bold mb-6">Projects</h1>
-      <div className="flex justify-between items-center mb-6">
-        <input
-          type="text"
-          placeholder="Search projects"
-          className="border border-gray-300 px-4 py-2 rounded-md w-1/2 mr-4"
-          value={searchTerm}
-          onChange={handleSearch} />
-        <select
-          className="border border-gray-300 px-4 py-2 rounded-md w-1/4"
-          value={statusFilter}
-          onChange={handleStatusFilter}
-        >
-          <option value="all">All projects</option>
-          <option value="complete">Completed projects</option>
-          <option value="overdue">Overdue projects</option>
-          <option value="incomplete">Incomplete projects</option>
-        </select>
-        <select
-          className="border border-gray-300 px-4 py-2 rounded-md w-1/4"
-          value={progressSortOrder}
-          onChange={handleProgressSortOrder}
-        >
-          <option value="ascendingending">Sort by ascending progress</option>
-          <option value="descendingending">Sort by descending progress</option>
-        </select>
-      </div>
-      <div className="grid grid-cols-5 gap-6 mt-6">
-        <div className="flex col-span-5">
-          <ProjectList projects={filteredProjects} />
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold mb-6">Projects</h1>
+          <FontAwesomeIcon icon={faHome} onClick={() => router.push("/")} className="text-gray-600 hover:text-gray-800 cursor-pointer" />
         </div>
-        <div className="col-span-3">
-          <Card className="h-4/5 overflow-auto">
-            <EmpTbl />
-          </Card>
+        <div className="flex justify-between items-center mb-6">
+          <input
+            type="text"
+            placeholder="Search projects"
+            className="border border-gray-300 px-4 py-2 rounded-md w-1/2 mr-4"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+          <select className="border border-gray-300 px-4 py-2 rounded-md w-1/4" value={statusFilter} onChange={handleStatusFilter}>
+            <option value="all">All projects</option>
+            <option value="complete">Completed projects</option>
+            <option value="overdue">Overdue projects</option>
+            <option value="incomplete">Incomplete projects</option>
+          </select>
+          <select className="border border-gray-300 px-4 py-2 rounded-md w-1/4" value={progressSortOrder} onChange={handleProgressSortOrder}>
+            <option value="ascendingending">Sort by ascending progress</option>
+            <option value="descendingending">Sort by descending progress</option>
+          </select>
         </div>
-        <div className="col-span-2">
-          <Card className="h-4/5 overflow-auto">
-            <MyDemo projectsId={"all"} />
-          </Card>
+        <div className="grid grid-cols-5 gap-6 mt-6">
+          <div className="flex col-span-5">
+            <ProjectList projects={filteredProjects} />
+          </div>
+          <div className="col-span-3">
+            <Card className="h-4/5 overflow-auto">
+              <EmpTbl />
+            </Card>
+          </div>
+          <div className="col-span-2">
+            <Card className="h-4/5 overflow-auto">
+              <MyDemo projectsId={"all"} />
+            </Card>
+          </div>
         </div>
       </div>
-    </div></>
-    
+    </>
   );
-  
-  }
+}

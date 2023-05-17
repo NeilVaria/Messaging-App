@@ -25,7 +25,7 @@ model User {
 
 model Message {
   id        Int           @id @default(autoincrement())
-  content   String
+  content   String        //@db.VarChar(255)
   createdAt DateTime      @default(now())
   authorId  String
   author    User          @relation(fields: [authorId], references: [id])
