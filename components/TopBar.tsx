@@ -76,7 +76,7 @@ const TopBar: React.FC<TopBarProps> = ({ selectedChatData, onCloseChat, onOpenNe
       // Render default content
       return (
         <div className="font-semibold text-s md:text-2xl flex flex-row w-full justify-between">
-          <div className="justify-center items-center flex">Make-It-All Internal Messaging System</div>
+          <div className="justify-center items-center flex">Chirp Messaging System</div>
           <div className="px-2">
             <Button className="flex justify-center items-center w-16 h-12 md:w-32 md:h-16 md:text-sm text-[0.625rem]" onClick={() => onOpenNewChat()}>
               New Chat
@@ -92,7 +92,7 @@ const TopBar: React.FC<TopBarProps> = ({ selectedChatData, onCloseChat, onOpenNe
       <div className="hidden sm:flex sm:w-[325px] md:w-[375px] border-r">
         <div className="flex flex-row p-3 md:p-5 items-center w-full h-14 md:h-16 lg:h-20">
           <img className="h-full w-auto" src="logo.png" alt="" />
-          <div className="p-2 md:p-4 hidden sm:inline sm:text-xs md:text-sm lg:text-lg xl:text-xl font-semibold text-gray-500">Make-It-All</div>
+          <div className="p-2 md:p-4 hidden sm:inline sm:text-xs md:text-sm lg:text-lg xl:text-xl font-semibold text-blue-900">Chirp</div>
         </div>
       </div>
       <div className="flex w-full sm:w-[calc(100vw-325px)] md:w-[calc(100vw-375px)] px-4 py-2">
