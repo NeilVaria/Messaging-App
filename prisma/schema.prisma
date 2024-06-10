@@ -19,12 +19,12 @@ model User {
   password    String
   Message     Message[]
   RoomMember  RoomMember[]
-  MessageSeen MessageSeen[] 
+  MessageSeen MessageSeen[]
 }
 
 model Message {
   id        Int           @id @default(autoincrement())
-  content   String        //@db.VarChar(255)
+  content   String //@db.VarChar(255)
   createdAt DateTime      @default(now())
   authorId  String
   author    User          @relation(fields: [authorId], references: [id])
