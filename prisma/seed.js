@@ -24,35 +24,6 @@ async function main() {
 
   const user1 = await prisma.User.upsert({
     where: {
-      username: "charlottebruns",
-    },
-    update: {},
-    create: {
-      name: "Charlotte Burns",
-      username: "charlottebruns",
-      role: "admin",
-      email: "charlotte@makeitall.com",
-      password: hash,
-    },
-  });
-
-  const user2 = await prisma.User.upsert({
-    where: {
-      username: "caroline",
-    },
-    update: {},
-
-    create: {
-      name: "Caroline Tew",
-      username: "caroline",
-      role: "admin",
-      email: "caroline@makeitall.com",
-      password: hash,
-    },
-  });
-
-  const user3 = await prisma.User.upsert({
-    where: {
       username: "jeffery",
     },
     update: {},
@@ -65,7 +36,7 @@ async function main() {
     },
   });
 
-  const user4 = await prisma.User.upsert({
+  const user2 = await prisma.User.upsert({
     where: {
       username: "donald",
     },
@@ -79,7 +50,7 @@ async function main() {
     },
   });
 
-  const user5 = await prisma.User.upsert({
+  const user3 = await prisma.User.upsert({
     where: {
       username: "emily",
     },
@@ -93,7 +64,7 @@ async function main() {
     },
   });
 
-  const user6 = await prisma.User.upsert({
+  const user4 = await prisma.User.upsert({
     where: {
       username: "alex",
     },
@@ -107,7 +78,7 @@ async function main() {
     },
   });
 
-  const user7 = await prisma.User.upsert({
+  const user5 = await prisma.User.upsert({
     where: {
       username: "natalie",
     },
@@ -121,7 +92,7 @@ async function main() {
     },
   });
 
-  const user8 = await prisma.User.upsert({
+  const user6 = await prisma.User.upsert({
     where: {
       username: "michael",
     },
@@ -135,7 +106,7 @@ async function main() {
     },
   });
 
-  const user9 = await prisma.User.upsert({
+  const user7 = await prisma.User.upsert({
     where: {
       username: "sophie",
     },
@@ -149,7 +120,7 @@ async function main() {
     },
   });
 
-  const user10 = await prisma.User.upsert({
+  const user8 = await prisma.User.upsert({
     where: {
       username: "daniel",
     },
@@ -163,7 +134,7 @@ async function main() {
     },
   });
 
-  const user11 = await prisma.User.upsert({
+  const user9 = await prisma.User.upsert({
     where: {
       username: "tommo",
     },
@@ -177,7 +148,7 @@ async function main() {
     },
   });
 
-  const user12 = await prisma.User.upsert({
+  const user10 = await prisma.User.upsert({
     where: {
       username: "ykapf",
     },
@@ -191,7 +162,7 @@ async function main() {
     },
   });
 
-  const user13 = await prisma.User.upsert({
+  const user11 = await prisma.User.upsert({
     where: {
       username: "monkey",
     },
@@ -205,7 +176,7 @@ async function main() {
     },
   });
 
-  const user14 = await prisma.User.upsert({
+  const user12 = await prisma.User.upsert({
     where: {
       username: "skywalker",
     },
@@ -219,7 +190,7 @@ async function main() {
     },
   });
 
-  const user15 = await prisma.User.upsert({
+  const user13 = await prisma.User.upsert({
     where: {
       username: "kenobi",
     },
