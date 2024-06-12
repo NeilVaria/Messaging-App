@@ -92,7 +92,7 @@ const TopBar: React.FC<TopBarProps> = ({ selectedChatData, onCloseChat, onOpenNe
       <div className="hidden sm:flex sm:w-[325px] md:w-[375px] border-r">
         <div className="flex flex-row p-3 md:p-5 items-center w-full h-14 md:h-16 lg:h-20">
           <img className="h-full w-auto" src="logo.png" alt="" />
-          <div className="p-2 md:p-4 hidden sm:inline sm:text-xs md:text-sm lg:text-lg xl:text-xl font-semibold text-blue-900">Chirp</div>
+          <div className="p-2 md:p-4 hidden sm:inline sm:text-xs md:text-sm lg:text-lg xl:text-xl font-semibold text-blue-500">Chirp</div>
         </div>
       </div>
       <div className="flex w-full sm:w-[calc(100vw-325px)] md:w-[calc(100vw-375px)] px-4 py-2">
